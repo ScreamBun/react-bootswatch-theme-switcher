@@ -1,5 +1,5 @@
 {
-  "name": "react-bootstwatch-theme-switcher",
+  "name": "react-bootswatch-theme-switcher",
   "version": "1.0.7",
   "description": "A React component to select and switch between Bootstrap (Bootswatch) Themes",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/raythree/react-bootstwatch-theme-switcher"
+    "url": "https://github.com/raythree/react-bootswatch-theme-switcher"
   },
   "keywords": [
     "React",
@@ -20,9 +20,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/czack425/react-bootstwatch-theme-switcher/issues"
+    "url": "https://github.com/czack425/react-bootswatch-theme-switcher/issues"
   },
-  "homepage": "https://github.com/czack425/react-bootstwatch-theme-switcher#readme",
+  "homepage": "https://github.com/czack425/react-bootswatch-theme-switcher#readme",
   "peerDependencies": {
     "react": ">=16.0",
     "bootstrap": "~4.3.1"
