@@ -162,7 +162,6 @@ typings/
 # Custom Ignore
 .idea/*
 .DS_Store
-package-lock.json
 dist
 lib
 npm-debug.log

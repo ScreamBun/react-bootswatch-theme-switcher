@@ -7,9 +7,10 @@ const download = require('download-file');
 const request = require('sync-request');
 const csso = require('csso');
 
-const SOURCE_DIR = path.join(__dirname, "src")
+const ROOT_DIR = path.join(__dirname, "..")
+const SOURCE_DIR = path.join(ROOT_DIR, "src")
 const THEME_DIR = path.join(SOURCE_DIR, 'themes')
-const ASSET_DIR = path.join(__dirname, 'assets')
+const ASSET_DIR = path.join(ROOT_DIR, 'assets')
 
 const CHECK_DIRS = [
   THEME_DIR,
@@ -17,6 +18,7 @@ const CHECK_DIRS = [
   path.join(ASSET_DIR, 'fonts')
 ]
 
+const ASSET_URL_DIR = "/assets/"
 const THEME_API = 'https://bootswatch.com/api/4.json'
 
 const CSS_URL_IMPORT = new NamedRegExp(/^@import url\([\"\'](:<url>.*?)[\"\']\);\s*?$/);
@@ -72,7 +74,7 @@ for (let theme of themes['themes']) {
           console.log("Downloaded file: " + opts['filename'])
         });
       }
-      line = line.replace(URL_REPLACE, 'url(\'' + ASSET_DIR + fileName + '\')')
+      line = line.replace(URL_REPLACE, 'url(\'' + ASSET_URL_DIR + fileName + '\')')
     }
 
     line = line.replace(/\\[^\\]/g, '\\\\')
