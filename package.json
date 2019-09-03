@@ -4,8 +4,8 @@
   "description": "A React component to select and switch between Bootstrap (Bootswatch) Themes",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "prepublish": "npm run get_themes && npm run build",
+    "build": "npm run clean && npm run get_themes && babel src --out-dir lib",
+    "prepublish": "npm run build",
     "clean": "rimraf ./lib",
     "get_themes": "node ./download_themes.js"
   },
@@ -14,15 +14,20 @@
     "url": "https://github.com/raythree/react-bootswatch-theme-switcher"
   },
   "keywords": [
+    "Bootstrap",
     "React",
-    "theme",
-    "Bootstrap"
+    "theme"
   ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/czack425/react-bootswatch-theme-switcher/issues"
   },
   "homepage": "https://github.com/czack425/react-bootswatch-theme-switcher#readme",
+  "files": [
+    "lib",
+    "src",
+    "index.d.ts"
+  ],
   "peerDependencies": {
     "react": ">=16.0",
     "bootstrap": "~4.3.1"

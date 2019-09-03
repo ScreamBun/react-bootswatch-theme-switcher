@@ -1,5 +1,5 @@
-import ThemeSwitcher from './lib/ThemeSwitcher'
-import ThemeChooser from './lib/ThemeChooser'
+import ThemeSwitcher from './src/ThemeSwitcher'
+import ThemeChooser from './src/ThemeChooser'
 
 export {
   ThemeChooser,

@@ -76,7 +76,7 @@ export default {
   plugins: [
     new CopyWebpackPlugin([
       { // Theme Assets
-        from: "node_modules/react-bootstwatch-theme-switcher/themes/",
+        from: "node_modules/react-bootstwatch-theme-switcher/src/assets/",
         to: "assets/",
         toType: "dir"
       }
