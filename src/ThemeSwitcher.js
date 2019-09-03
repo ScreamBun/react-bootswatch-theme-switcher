@@ -1,8 +1,7 @@
-import React, { Suspense, lazy } from "react"
-import PropTypes from "prop-types"
-import { validThemes } from "./themes"
-import "bootstrap"
-import "./assets/css/loader.css"
+import React, { Suspense, lazy } from "react";
+import PropTypes from "prop-types";
+import { validThemes } from "./themes";
+import "bootstrap";
 
 const setItem = (key, obj) => {
   if (!key) return null;
