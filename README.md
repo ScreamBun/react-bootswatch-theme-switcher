@@ -1,22 +1,24 @@
-#react-bootstrap-theme-switcher
+# react-bootstwatch-theme-switcher
 
-A React component for dynamically switching between Bootstrap and [Bootswatch](https://bootswatch.com/) themes. Two lines of code and copy themes to your Web server.
+A React component for dynamically switching between [Bootswatch](https://bootswatch.com/) themes. Two lines of code and copy themes to your Web server.
 
-<!-- Update This image -->
+<!--
+Update This image
 <img src="http://demo.ray3.io/theme-switcher/theme-switcher.png" />
 
-<!-- Update Demos
+Update Demos
 [A live demo is here](http://demo.ray3.io/theme-switcher)
 
 [Code for demo here](https://github.com/raythree/theme-switcher-demo)
 -->
 
 ### Install
+
 ```
-npm install react-bootstrap-theme-switcher
+npm install czack425/react-bootstwatch-theme-switcher
 ```
 ### Setup
-The theme switcher works by dynamically modifying the document's style element to switch between the Bootstrap themes. There are two components:
+The theme switcher works by dynamically modifying the document's style element to switch between the Bootstwatch themes. There are two components:
 
  * A ```ThemeSwitcher``` component that wraps your top-level component. This is responsible for theme loading and hiding your app during the load.
  * A ```ThemeChooser``` component that displays a dropdown button select menu allowing the user to choose a theme.
@@ -24,7 +26,7 @@ The theme switcher works by dynamically modifying the document's style element t
 The ThemeSwitcher will make sure your app is not displayed until the selected theme is loaded, and will also hide it whenever the ThemeChooser selects a new theme. Here is an example of an app that uses the Redux Provider and React Router rendered in index.js:
 
 ```javascript
-import { ThemeSwitcher } from 'react-bootstrap-theme-switcher';
+import { ThemeSwitcher } from 'react-bootstwatch-theme-switcher';
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -74,7 +76,7 @@ export default {
   plugins: [
     new CopyWebpackPlugin([
       { // Theme Assets
-        from: "node_modules/react-bootstrap-theme-switcher/themes/",
+        from: "node_modules/react-bootstwatch-theme-switcher/themes/",
         to: "assets/",
         toType: "dir"
       }
@@ -106,3 +108,6 @@ render(
 );
 ```
 Use the lower case theme names, the ```ThemeChooser``` will capitalize them and show them in alphabetical order.
+
+#### Credit
+- This is an updated variation of the [react-bootstrap-theme-switcher](https://github.com/raythree/react-bootstrap-theme-switcher) by raythee
