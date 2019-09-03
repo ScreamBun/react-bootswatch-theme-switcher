@@ -1,4 +1,4 @@
-# react-bootstwatch-theme-switcher
+# react-bootswatch-theme-switcher
 
 A React component for dynamically switching between [Bootswatch](https://bootswatch.com/) themes. Two lines of code and copy themes to your Web server.
 
@@ -15,10 +15,10 @@ Update Demos
 ### Install
 
 ```
-npm install czack425/react-bootstwatch-theme-switcher
+npm install czack425/react-bootswatch-theme-switcher
 ```
 ### Setup
-The theme switcher works by dynamically modifying the document's style element to switch between the Bootstwatch themes. There are two components:
+The theme switcher works by dynamically modifying the document's style element to switch between the Bootswatch themes. There are two components:
 
  * A ```ThemeSwitcher``` component that wraps your top-level component. This is responsible for theme loading and hiding your app during the load.
  * A ```ThemeChooser``` component that displays a dropdown button select menu allowing the user to choose a theme.
@@ -26,7 +26,7 @@ The theme switcher works by dynamically modifying the document's style element t
 The ThemeSwitcher will make sure your app is not displayed until the selected theme is loaded, and will also hide it whenever the ThemeChooser selects a new theme. Here is an example of an app that uses the Redux Provider and React Router rendered in index.js:
 
 ```javascript
-import { ThemeSwitcher } from 'react-bootstwatch-theme-switcher';
+import { ThemeSwitcher } from 'react-bootswatch-theme-switcher';
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
