@@ -1,7 +1,7 @@
-var ThemeChooser = require('./lib/ThemeChooser').ThemeChooser;
-var ThemeSwitcher = require('./lib/ThemeSwitcher').ThemeSwitcher;
+import ThemeSwitcher from './lib/ThemeSwitcher'
+import ThemeChooser from './lib/ThemeChooser'
 
-module.exports = {
-  ThemeChooser: ThemeChooser,
-  ThemeSwitcher: ThemeSwitcher
-};
+export {
+  ThemeChooser,
+  ThemeSwitcher
+}

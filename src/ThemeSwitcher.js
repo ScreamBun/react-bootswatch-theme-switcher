@@ -1,148 +1,191 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Lazyloader from './lazyloader';
+import React, { Suspense, lazy } from "react"
+import PropTypes from "prop-types"
+import { validThemes } from "./themes"
+import "bootstrap"
+import "./assets/css/loader.css"
 
-function setItem(key, obj) {
+const setItem = (key, obj) => {
   if (!key) return null;
   try {
     localStorage.setItem(key, JSON.stringify(obj));
-  }
-  catch (err) {
+  } catch (err) {
     return null;
   }
 }
 
-function getItem(key) {
+const getItem = (key) => {
   if (!key) return null;
   try {
-    var item = localStorage.getItem(key)
+    let item = localStorage.getItem(key)
     return item ? JSON.parse(item) : null;
-  }
-  catch (err) {
+  } catch (err) {
     return null;
   }
 }
 
-// check if boootstrap and jquery javascript files are loaded
-function isJsLoaded() {
-  const head = document.getElementsByTagName('head')[0];
+const loader = (styles, cb) => {
+  const head = document.getElementsByTagName("head")[0];
+  let styleElm = document.createElement("style")
+  styleElm.setAttribute("type", "text/css")
+  styleElm.setAttribute("data-type", "theme")
+  styleElm.innerHTML = styles !== "" ? styles : ""
+  head.append(styleElm)
+
+  if (typeof(cb) === "function") {
+    cb()
+  }
+}
+
+// check if boootstrap styles are loaded
+const isLoaded = () =>  {
+  const head = document.getElementsByTagName("head")[0];
   const nodes = head.childNodes;
   let loaded = false;
-  for (let ix = 0; ix < nodes.length; ix++) {
-    let node = nodes.item(ix);
-    if (node.href && node.href.indexOf('jquery.min.js') > -1) {
+
+  nodes.forEach(node => {
+    let tag = (node.tagName || "").toLowerCase()
+    let dataAttrs = node.dataset || {}
+    let theme = dataAttrs.hasOwnProperty("type") ? (dataAttrs.type == "theme") : false
+    let styles = node.innerHTML !== ""
+
+    if (tag == "style" && theme && styles) {
       loaded = true;
     }
-  }
+  })
   return loaded;
 }
 
-// remove any bootstrap links
-function removeCurrentTheme() {
-  const head = document.getElementsByTagName('head')[0];
+// remove any bootstrap style
+const removeCurrentTheme = () => {
+  const head = document.getElementsByTagName("head")[0];
   const nodes = head.childNodes;
-  const list =[]
-  for (let ix = 0; ix < nodes.length; ix++) {
-    let node = nodes.item(ix);
-    if (node.href && node.href.indexOf('bootstrap') > -1) {
-      list.push(node)
+
+  nodes.forEach(node => {
+    let tag = (node.tagName || "").toLowerCase()
+    let dataAttrs = node.dataset || {}
+    let theme = dataAttrs.hasOwnProperty("type") ? (dataAttrs.type == "theme") : false
+
+    if (tag == "style" && theme) {
+      head.removeChild(node)
     }
-  }
-  list.forEach((node) => { head.removeChild(node) });
+  })
 }
 
 //------------------------------------------------------------------------------
 // Top level ThemeSwitcher Component
 //------------------------------------------------------------------------------
 class ThemeSwitcher extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.load = this.load.bind(this);
-    this.loadDefault = this.loadDefault.bind(this);
+    this.loadTheme = this.loadTheme.bind(this);
 
-    this.themePath = props.themePath || '/themes/';
-    if (this.themePath.charAt(this.themePath.length - 1) !== '/') {
-      this.themePath = this.themePath + '/';
+    let themes = [...this.props.themeOptions]
+
+    let defaultTheme = getItem(this.props.storeThemeKey)
+    themes.push(defaultTheme ? defaultTheme : this.props.defaultTheme)
+
+    themes = Object.assign(
+      ...this.props.themeOptions.map(t => ({[t]: validThemes.includes(t) ? require("./themes/"+t).default : ""})),
+      this.props.themes
+    )
+    themes = Object.assign(...Object.keys(themes).map(k => (null, "", " ").includes(themes[k]) ? {} : {[k]: themes[k]}))
+
+    this.state = {
+      loaded: false,
+      currentTheme: null,
+      themes: themes
     }
-    this.state = {loaded: false, currentTheme: null};
   }
 
   componentDidMount() {
-    // load bootstrap javascript just at first mount
-    if (!isJsLoaded()) {
-      Lazyloader.load(this.themePath + 'js/jquery.min.js', function () {
-        Lazyloader.load(this.themePath + 'js/bootstrap.min.js', function () {
-          this.load(); // load default theme
-        }.bind(this));
-      }.bind(this));
+    if (!isLoaded()) {
+      this.load(); // load default theme
     }
   }
 
-  loadDefault() {
-    Lazyloader.load(this.themePath + 'default/bootstrap.min.css', function () {
-      Lazyloader.load(this.themePath + 'default/bootstrap-theme.min.css', function () {
-        this.setState({loaded: true, currentTheme: 'default'});
-      }.bind(this));
-    }.bind(this));
+  loadTheme(name) {
+    name = Object.keys(this.state.themes).indexOf(name) >= 0 ? name : this.props.defaultTheme
+    removeCurrentTheme()
+
+    setItem(this.props.storeThemeKey, name);
+    loader(this.state.themes[name], () => {
+      this.setState({
+        loaded: true,
+        currentTheme: name
+      })
+    })
   }
 
   load(theme) {
-    this.setState({loaded: false})
-    removeCurrentTheme();
+    this.setState({
+      loaded: false
+    })
 
-    let name = theme;
-    if (!name) {
+    if (!theme) {
+      let storedTheme = getItem(this.props.storeThemeKey)
       // see if a theme was previously stored, will return null if storedThemeKey not set
-      name = getItem(this.props.storeThemeKey);
-    }
-    if (!name) {
-      name = this.props.defaultTheme;
-    }
-    if (name === 'default') {
-      return this.loadDefault();
+      theme = storedTheme ? storedTheme : this.props.defaultTheme
     }
 
-    Lazyloader.load(this.themePath + name + '/bootstrap.min.css', function () {
-      setItem(this.props.storeThemeKey, name);
-      this.setState({loaded: true, currentTheme: name})
-    }.bind(this));
+    this.loadTheme(theme)
   }
 
   // pass reference to this down to ThemeChooser component
   getChildContext() {
     return {
+      defaultTheme: this.props.defaultTheme,
       themeSwitcher: this,
-      themes: this.props.themes,
+      themes: this.props.themeOptions.filter(t => true),
       currentTheme: this.state.currentTheme
-    };
+    }
   }
 
   render() {
-    if (!this.state.loaded) return null;
-    return this.props.children || <span/>
+    if (Object.keys(this.state.themes).length === 0) {
+      return (
+        <div style={{
+          display: "table",
+          position: "fixed",
+          top: 0,
+          height: "100%",
+          width: "100%"
+        }}>
+          <div style={{
+            display: "table-cell",
+            textAlign: "center",
+            verticalAlign: "middle"
+          }}>
+            <div className="loader" />
+            <p className="pt-0 mt-0">Loading...</p>
+          </div>
+        </div>
+      )
+    } else {
+      return this.props.children || <span />
+    }
   }
 }
 
 ThemeSwitcher.childContextTypes = {
+  defaultTheme: PropTypes.string,
   themeSwitcher: PropTypes.object,
   themes: PropTypes.array,
   currentTheme: PropTypes.string
 };
 
 ThemeSwitcher.propTypes = {
-  themePath: PropTypes.string,
   defaultTheme: PropTypes.string,
   storeThemeKey: PropTypes.string,
-  themes: PropTypes.array
+  themes: PropTypes.object,
+  themeOptions: PropTypes.array
 };
 
 ThemeSwitcher.defaultProps = {
-  themePath: '/themes',
-  defaultTheme: 'default',
+  defaultTheme: "lumen",
   storeThemeKey: null,
-  themes: ['default', 'yeti', 'superhero', 'paper', 'lumen', 'darkly',
-           'simplex', 'cerulean', 'sandstone', 'cosmo', 'cyborg', 'slate',
-           'flatly', 'journal', 'readable', 'spacelab', 'united']
+  themes: null,
+  themeOptions: ["cerulean", "cosmo", "cyborg", "darkly", "flatly", "journal", "litera", "lumen", "lux", "materia", "minty", "pulse", "sandstone", "simplex", "sketchy", "slate", "solar", "spacelab", "superhero", "united", "yeti"]
 };
 
-export { ThemeSwitcher };
+export default ThemeSwitcher;

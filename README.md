@@ -2,20 +2,21 @@
 
 A React component for dynamically switching between Bootstrap and [Bootswatch](https://bootswatch.com/) themes. Two lines of code and copy themes to your Web server.
 
+<!-- Update This image -->
 <img src="http://demo.ray3.io/theme-switcher/theme-switcher.png" />
 
+<!-- Update Demos
 [A live demo is here](http://demo.ray3.io/theme-switcher)
 
 [Code for demo here](https://github.com/raythree/theme-switcher-demo)
-
-**NOTE:** [LazyLoader](https://github.com/LukasBombach/Lazyloader) is used to dynamically load stylesheets and re-render after they have been loaded. The theme switcher requires Bootstrap themes and JQuery. Do not load these files either via Webpack or via links in your index.html. Configure the file structure described below (or use the versions included) and the ```ThemeSwitcher``` will automatically load them as needed.
+-->
 
 ### Install
 ```
 npm install react-bootstrap-theme-switcher
 ```
 ### Setup
-The theme switcher works by dynamically modifying the document's stylesheet link elements to switch between the default Bootstrap theme or one of the selected Bootswatch themes. There are two components:
+The theme switcher works by dynamically modifying the document's style element to switch between the Bootstrap themes. There are two components:
 
  * A ```ThemeSwitcher``` component that wraps your top-level component. This is responsible for theme loading and hiding your app during the load.
  * A ```ThemeChooser``` component that displays a dropdown button select menu allowing the user to choose a theme.
@@ -29,7 +30,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 render(
     <Provider store={store}>
-      <ThemeSwitcher themePath="/themes" defaultTheme="yeti">
+      <ThemeSwitcher defaultTheme="yeti">
         <Router history={history} routes={routes} />
       </ThemeSwitcher>
     </Provider>, document.getElementById('app')
@@ -40,91 +41,68 @@ render(
 To let users swich themes add the ```ThemeChooser``` to one of your pages (e.g. a Settings page). The ```ThemeChooser``` gets passed a reference to the ```ThemeSwitcher``` via the ```React Context``` mechanism, so it can trigger a re-render and not display the children components during theme unloading and reloading.
 
 ###ThemeSwitcher props
-* ```themePath``` - location of theme files on server (default '/themes')
-* ```defaultTheme``` - default theme to use if user has not selected one (default ```'default'```, the Bootstrap theme)
-* ```storeThemeKey``` - name of localStorage key used to save the last theme (default ```null```)
-* ```themes``` - array of themes to display in the ```ThemeChooser``` (default is all Bootswatch themes)
+* ```defaultTheme``` - default theme to use if user has not selected one (default ```'lumen'```)
+* ```storeThemeKey``` - name of localStorage key used to save the last theme (default ```theme```)
+* ```themes``` - named array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```null```)
+* ```themeOptions``` -  array of themes to display in the ```ThemeChooser``` (default is all Bootswatch themes)
+
+###ThemeChooser props
+* ```style``` - custom styles to apply to the ```ThemeChooser``` (default ```{}```)
+* ```size``` - size of the ```ThemeChooser```, one of (xs, sm, md, lg) (default ```""```)
+* ```change``` - function called when the theme is changed  (default ```null```)
+
 
 ### Theme files (and required Bootstrap and JQuery javascript)
 
-For convenience the theme switcher comes bundled with the [Bootswatch](https://bootswatch.com/) themes, a copy of [Bootstrap 3.3.7](http://getbootstrap.com/), and [JQuery 3.1.0](https://jquery.com/) located in the themes folder. These files MUST be copied to your distribution folder of your Web server. The structure is:
+- For convenience the theme switcher comes bundled with the [Bootswatch](https://bootswatch.com/) themes and dependent fontfaces. These files MUST be copied to your distribution folder of your Web server.
+
+- The theme switcher will add and remove themes by changing the style of the document. For example, all theme styles will be places in the documents style tag with the data-type attribute of theme.
 
 ```
-themes
-  /js
-    jquery.min.js
-    bootstrap.min.js
-  /fonts
-    ...bootstrap Glyphicon fonts
-  /default
-    (these two files are the default bootstrap theme)
-    bootstrap.min.css
-    bootstrap-theme.min.css
-  /yeti
-    bootstrap.min.css (yeti theme)
-  /cerulean
-    bootstrap.min.css (cerulean theme)
-  other themes    
+<style type="text/css" data-type="theme">
+	THEME STYLES...
+</style>
 ```
 
-The theme switcher will add and remove themes by adding and deleting links to the document. For example, if you configure it to locate the themes in '/themes' it will generate links like:
-
-```
-<link rel="stylesheet" type="text/css" href="/themes/default/bootstrap.min.css"
-<link rel="stylesheet" type="text/css" href="/themes/default/bootstrap-theme.min.css"
-```
-
-for the default bootstrap theme, or:
-
-```
-<link rel="stylesheet" type="text/css" href="/themes/<themeName>/bootstrap.min.css"
-```
-
-for any of the other themes.
-
-Here is a sample Webpack config that uses the [CopyWebpackPlugin](https://github.com/kevlened/copy-webpack-plugin) to copy the theme files provided with the distribution into your bundle:
+- Here is a sample Webpack config that uses the [CopyWebpackPlugin](https://github.com/kevlened/copy-webpack-plugin) to copy the theme files provided with the distribution into your bundle:
 
 ```javascript
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+import CopyWebpackPlugin from "copy-webpack-plugin";
 
 export default {
   ...
   plugins: [
     new CopyWebpackPlugin([
-        {context: 'node_modules/react-bootstrap-theme-switcher/themes/', from: '**/*', to: 'themes/'}
-      ],
-      {copyUnmodified: true}
-    ),
+      { // Theme Assets
+        from: "node_modules/react-bootstrap-theme-switcher/themes/",
+        to: "assets/",
+        toType: "dir"
+      }
+    ]),
   ...  
 ```
-
-You can use the versions provided by the theme switcher from ```node_modules/react-bootstrap-theme-switcher/themes``` or you generate your own files using different versions of JQuery or Bootstrap. However, the structure and file naming must exactly match what is provided in the distribution. Instructions on downloading/customizing Bootswatch themes can be [found here](https://github.com/thomaspark/bootswatch).
-
-**NOTE:** If you put them in a directory other than ```/themes``` you can specify the ```themePath``` property of the ```ThemeSwitcher```.
-
-**NOTE:** Do NOT load the default Bootstrap theme or JQuery as you might normally do with webpack, e.g. ```require('node_modules/.../bootstrap')```, because the ```ThemeSwitcher``` looks for specifically named stylesheet links when removing the current theme. Let the ThemeSwitcher load both Bootstrap and JQuery at startup.
 
 ### Auto reload last theme used
 
 If you want the last theme used to be automatically loaded in the future you can provide the ThemeSwitcher with the name of a localStorage key to use to save the theme name:
 
 ```javascript
-<ThemeSwitcher defaultTheme="yeti" themePath="/themes" storeThemeKey="theme" />
+<ThemeSwitcher defaultTheme="yeti" storeThemeKey="theme" />
 ```
 This way, if no theme is currently loaded 'yeti' will be used, but if the user selects another theme it's name will be saved in localStorage under the ```theme``` key and used in the future until it is changed again.
 
 ### Theme selection
-By default the ```ThemeChooser``` displays all Bootswatch themes. However, if you only want to use a subset you can specify the theme names via the ```themes``` property of the ```ThemeSwitcher```, for example:
+By default the ```ThemeChooser``` displays all Bootswatch themes. However, if you only want to use a subset you can specify the theme names via the ```themeOptions``` property of the ```ThemeSwitcher```, for example:
 
 ```javascript
 let themes = ['default', 'cerulean', 'darkly'];
 
 render(
     <Provider store={store}>
-      <ThemeSwitcher defaultTheme='default' storeThemeKey="theme" themes={themes}>
+      <ThemeSwitcher defaultTheme='default' storeThemeKey="theme" themeOptions={themes}>
         <Router history={history} routes={routes} />
       </ThemeSwitcher>
     </Provider>, document.getElementById('app')
 );
 ```
-Make sure that the themes provided include the ```defaultTheme```, if set, and use the lower case theme names. The ```ThemeChooser``` will capitalize them and show them in alphabetical order.
+Use the lower case theme names, the ```ThemeChooser``` will capitalize them and show them in alphabetical order.
