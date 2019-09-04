@@ -8,7 +8,7 @@
     "prepublish": "npm run build",
     "clean": "rimraf ./lib ./assets/fonts",
     "get_themes": "node ./scripts/download_themes.js",
-    "postinstall": "npm install fs-extra npm && node ./scripts/postinstall.js "
+    "postinstall": "npm install fs-extra npm && npm install $(node ./scripts/postinstall.js) && npm run build"
   },
   "repository": {
     "type": "git",
@@ -46,9 +46,12 @@
     "download-file": "^0.1.5",
     "fs-extra": "^8.1.0",
     "named-regexp-groups": "^1.0.3",
-    "npm": "^6.11.2",
+    "npm": "^6.11.3",
     "prop-types": "^15.7.2",
     "rimraf": "^3.0.0",
     "sync-request": "^6.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1"
   }
 }
