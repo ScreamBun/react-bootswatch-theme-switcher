@@ -7,8 +7,7 @@
     "build": "npm run clean && npm run get_themes && babel src --out-dir lib",
     "prepublish": "npm run build",
     "clean": "rimraf ./lib ./assets/fonts",
-    "get_themes": "node ./scripts/download_themes.js",
-    "postinstall": "npm install fs-extra npm && npm install $(node ./scripts/postinstall.js) && npm run build"
+    "get_themes": "node ./scripts/download_themes.js"
   },
   "repository": {
     "type": "git",
@@ -25,10 +24,10 @@
   },
   "homepage": "https://github.com/czack425/react-bootswatch-theme-switcher#readme",
   "files": [
-    "assets",
-    "lib",
-    "scripts",
-    "src"
+    "assets/",
+    "lib/",
+    "scripts/",
+    "src/"
   ],
   "peerDependencies": {
     "bootstrap": "~4.3.1",
@@ -36,12 +35,13 @@
     "popper.js": "^1.14.3",
     "react": ">=16.0"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
+    "bootstrap": "^4.3.1",
     "csso": "^3.5.1",
     "download-file": "^0.1.5",
     "fs-extra": "^8.1.0",
@@ -50,8 +50,5 @@
     "prop-types": "^15.7.2",
     "rimraf": "^3.0.0",
     "sync-request": "^6.1.0"
-  },
-  "dependencies": {
-    "bootstrap": "^4.3.1"
   }
 }
