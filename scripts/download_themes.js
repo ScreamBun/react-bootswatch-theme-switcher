@@ -23,7 +23,8 @@ const THEME_API = 'https://bootswatch.com/api/4.json'
 
 const CSS_URL_IMPORT = new NamedRegExp(/^@import url\([\"\'](:<url>.*?)[\"\']\);\s*?$/);
 const FILE_URL_IMPORT = new NamedRegExp(/\s*?src:( local\(.*?\),)? local\([\'\"](:<name>.*?)[\'\"]\), url\([\'\"]?(:<url>.*?)[\'\"]?\) format\([\'\"](:<format>.*?)[\'\"]\);/);
-const URL_REPLACE = new NamedRegExp(/url\([\"\"]?(:<url>.*?)[\"\"]?\)/)
+const URL_REPLACE = new NamedRegExp(/url\([\"\"]?(:<url>.*?)[\"\"]?\)/);
+
 
 for (i in CHECK_DIRS) {
   let dir = CHECK_DIRS[i]
@@ -34,12 +35,12 @@ for (i in CHECK_DIRS) {
 
 let themes = request('GET', THEME_API);
 themes = JSON.parse(themes.getBody('utf8'));
-theme_names = []
+themeNames = []
 
 for (let theme of themes['themes']) {
   console.log('Downloading Theme: ' + theme['name']);
-  let theme_name = theme['name'].toLowerCase();
-  theme_names.push(theme_name)
+  let themeName = theme['name'].toLowerCase();
+  themeNames.push(themeName)
 
   let css = request('GET', theme['css']).getBody('utf8'),
     pre_css_lines = [],
@@ -83,7 +84,7 @@ for (let theme of themes['themes']) {
     post_css_lines.push(line)
   }
 
-  let css_file = fs.createWriteStream(path.join(THEME_DIR, theme_name + '.js'), {
+  let css_file = fs.createWriteStream(path.join(THEME_DIR, themeName + '.js'), {
     flags: 'w'
   });
   css_file.write('export default `\n')
@@ -94,7 +95,7 @@ for (let theme of themes['themes']) {
     sourceMap: false
   }).css)
 
-  css_file.write('\n`')
+  css_file.write('\n`;\n')
   css_file.end();
 }
 
@@ -102,6 +103,9 @@ for (let theme of themes['themes']) {
 let theme_index_file = fs.createWriteStream(path.join(SOURCE_DIR, 'themes', 'index.js'), {
   flags: 'w'
 });
-theme_index_file.write('let validThemes = [\n\t\''+ theme_names.join('\',\n\t \'') +'\'\n]\n')
-theme_index_file.write('export {\n\tvalidThemes\n}')
-theme_index_file.end()
+
+themeNames.forEach(theme => {
+  theme_index_file.write(`import ${theme} from './${theme}';\n`);
+});
+theme_index_file.write(`\nexport default {\n\t${themeNames.join(',\n\t')}\n};\n`);
+theme_index_file.end();

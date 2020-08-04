@@ -2,12 +2,16 @@
   "name": "react-bootswatch-theme-switcher",
   "version": "1.0.7",
   "description": "A React component to select and switch between Bootstrap (Bootswatch) Themes",
-  "main": "./lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && npm run get_themes && babel src --out-dir lib",
-    "prepublish": "npm run build",
-    "clean": "rimraf ./lib ./assets/fonts",
-    "get_themes": "node ./scripts/download_themes.js"
+    "build": "npm run build:dist",
+    "build:dist": "rimraf dist && npm run build:commonjs",
+    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
+    "build:tsc": "tsc",
+    "get_themes": "node ./scripts/download_themes.js",
+    "lint": "eslint . --cache --ext .js,.jsx,.ts,.tsx",
+    "lint-errors": "eslint . --cache --quiet --ext .js,.jsx,.ts,.tsx",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -16,7 +20,8 @@
   "keywords": [
     "Bootstrap",
     "React",
-    "theme"
+    "Themes",
+    "Selector"
   ],
   "license": "ISC",
   "bugs": {
@@ -25,30 +30,53 @@
   "homepage": "https://github.com/czack425/react-bootswatch-theme-switcher#readme",
   "files": [
     "assets/",
-    "lib/",
-    "scripts/",
-    "src/"
+    "dist/"
   ],
-  "peerDependencies": {
-    "bootstrap": "~4.3.1",
-    "jquery": "^3.4.1",
-    "popper.js": "^1.14.3",
-    "react": ">=16.0"
-  },
   "dependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "bootstrap": "^4.3.1",
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.0",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@babel/plugin-transform-object-assign": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/react": "^16.9.44",
+    "@types/reactstrap": "^8.5.0",
+    "@typescript-eslint/eslint-plugin": "^3.8.0 ",
+    "@typescript-eslint/parser": "^3.8.0 ",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-extensible-destructuring": "^4.3.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-transform-react-constant-elements": "^6.23.0",
+    "cross-env": "^7.0.2",
     "csso": "^3.5.1",
     "download-file": "^0.1.5",
-    "fs-extra": "^8.1.0",
-    "named-regexp-groups": "^1.0.3",
-    "npm": "^6.11.3",
+    "eslint": "^7.6.0",
+    "eslint-plugin-compat": "^3.8.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-eslint-plugin": "^2.3.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.5",
+    "fs-extra": "^9.0.1",
+    "named-regexp-groups": "^1.0.5",
     "prop-types": "^15.7.2",
-    "rimraf": "^3.0.0",
-    "sync-request": "^6.1.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "reactstrap": "^8.5.1",
+    "rimraf": "^3.0.2",
+    "sync-request": "^6.1.0",
+    "typescript": "^3.9.7"
+  },
+  "peerDependencies": {
+    "reactstrap": ">=8.5.0",
+    "react": ">=16.2.0",
+    "react-dom": ">=16.2.0"
   }
 }
