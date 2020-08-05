@@ -95,7 +95,7 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
     return {
       defaultTheme,
       themeSwitcher: this,
-      themes: [ ...themeOptions ],
+      themes: Array.from(themeOptions),
       currentTheme
     };
   }

@@ -1,58 +1,62 @@
+/* eslint global-require: off, import/no-extraneous-dependencies: off */
 const developmentEnvironments = ['development', 'test'];
-const { BABEL_ENV } = process.env;
 
-console.log("Running Babel ...", { BABEL_ENV });
+const developmentPlugins = [
+  // require('react-hot-loader/babel')
+];
 
-const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV.substring("modules:".length) : "es";
+const productionPlugins = [
+  // require('babel-plugin-dev-expression'),
+  // babel-preset-react-optimize
+  // require('@babel/plugin-transform-react-constant-elements'),
+  // require('@babel/plugin-transform-react-inline-elements'),
+  // require('babel-plugin-transform-react-remove-prop-types')
+];
 
-// For the ES configuration only transpile react to valid JavaScript.
-// For commonjs transpile to old JS versions.
-const presets = moduleSystem === "es"
-  ? ['@babel/preset-react']
-  : [
-    ['@babel/preset-env', {
-      targets: {
-        ie: 11,
-        edge: 14,
-        firefox: 45,
-        chrome: 49,
-        safari: 10,
-        node: '6.11',
-      },
-      modules: moduleSystem,
-    }],
-    '@babel/preset-react'
-  ];
+module.exports = api => {
+  // see docs about api at https://babeljs.io/docs/en/config-files#apicache
+  const development = api.env(developmentEnvironments);
 
-
-module.exports = {
-  presets,
-  plugins: [
-    '@babel/plugin-transform-object-assign',
-    '@babel/plugin-proposal-object-rest-spread',
-    'babel-plugin-extensible-destructuring',
-    [
-      // The ES system does not polyfill etc, while the others do
-      '@babel/plugin-transform-runtime',
-      {
-        helpers: true,
-        useESModules: moduleSystem === 'es'
-      }
+  return {
+    presets: [
+      // @babel/preset-env will automatically target our browserslist targets
+      require('@babel/preset-env'),
+      require('@babel/preset-typescript'),
+      [require('@babel/preset-react'), { development }]
     ],
-    // Stage 3
-    [
-      '@babel/plugin-proposal-class-properties',
-      { loose: true }
-    ],
-  ],
-  env: {
-    production: {
-      plugins: [
-        // Optimize constant react elements in the production build. (Makes debugging harder, so skip this in development)
-        'transform-react-constant-elements',
+    plugins: [
+      // Stage 0
+      // require('@babel/plugin-proposal-function-bind'),
+      [require('@babel/plugin-transform-runtime'), { polyfill: false, regenerator: true }],
+      /*
+      // Stage 1
+      require('@babel/plugin-proposal-export-default-from'),
+      require('@babel/plugin-proposal-logical-assignment-operators'),
+      [require('@babel/plugin-proposal-optional-chaining'), { loose: false }],
+      [
+        require('@babel/plugin-proposal-pipeline-operator'),
+        { proposal: 'minimal' }
       ],
-      ignore: ['test/*']
-    }
-  },
-  ignore: ['scripts/*.js']
+      [
+        require('@babel/plugin-proposal-nullish-coalescing-operator'),
+        { loose: false }
+      ],
+      require('@babel/plugin-proposal-do-expressions'),
+
+      // Stage 2
+      [require('@babel/plugin-proposal-decorators'), { legacy: true }],
+      require('@babel/plugin-proposal-function-sent'),
+      require('@babel/plugin-proposal-export-namespace-from'),
+      require('@babel/plugin-proposal-numeric-separator'),
+      require('@babel/plugin-proposal-throw-expressions'),
+
+      // Stage 3
+      require('@babel/plugin-syntax-dynamic-import'),
+      require('@babel/plugin-syntax-import-meta'),*/
+      [require('@babel/plugin-proposal-class-properties'), { loose: true }],
+      // require('@babel/plugin-proposal-json-strings'),
+
+      ...(development ? developmentPlugins : productionPlugins)
+    ]
+  };
 };

@@ -158,6 +158,14 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Built Files
+/dist/
+/src/**/*.d.ts
+/src/**/*.js
+
+# Definitions
+!src/@types/**/*.d.ts
+
 
 # Custom Ignore
 .idea/*
