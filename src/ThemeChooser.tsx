@@ -1,50 +1,38 @@
 /* eslint react/static-property-placement: 1 */
 import React, { Component, CSSProperties, MouseEvent } from 'react';
+import PropTypes from 'prop-types';
 import {
   Button, ButtonDropdown, ButtonGroup, DropdownMenu, DropdownToggle
 } from 'reactstrap';
 import { ThemeContext } from './interfaces';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.substring(1);
 
 //------------------------------------------------------------------------------
 // ThemeChooser Interfaces
 //------------------------------------------------------------------------------
-interface PropTypes {
+interface ThemeChooserProps {
   style: { [key: string]: CSSProperties };
   size: 'sm'|'lg'|'';
   change: (theme: string) => void;
 }
 
-interface State {
+interface ThemeChooserState {
   listOpen: boolean;
   currentTheme: string;
   defaultTheme: string;
 }
 
-const defaultProps: PropTypes = {
-  style: {},
-  size: '',
-  change: () => {}
-};
-
-const Context = React.createContext<ThemeContext>({
-  defaultTheme: 'lumen',
-  themeSwitcher: undefined,
-  themes: [],
-  currentTheme: ''
-});
-
 //------------------------------------------------------------------------------
 // ThemeChooser Component
 //------------------------------------------------------------------------------
-class ThemeChooser extends Component<PropTypes, State> {
-  static contextType = Context;
-  static defaultProps = defaultProps;
-  context!: React.ContextType<typeof Context>;
+class ThemeChooser extends Component<ThemeChooserProps, ThemeChooserState> {
+  static contextTypes: Record<string, any>;
+  static defaultProps: ThemeChooserProps;
   themes: Array<string>;
 
-  constructor(props: PropTypes, context: ThemeContext) {
+  constructor(props: ThemeChooserProps, context: ThemeContext) {
     super(props, context);
     this.onSelect = this.onSelect.bind(this);
     this.toggleList = this.toggleList.bind(this);
@@ -124,5 +112,19 @@ class ThemeChooser extends Component<PropTypes, State> {
     );
   }
 }
+
+// Static Properties
+ThemeChooser.contextTypes = {
+  defaultTheme: PropTypes.string.isRequired,
+  themeSwitcher: PropTypes.instanceOf(ThemeSwitcher).isRequired,
+  themes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currentTheme: PropTypes.string.isRequired
+};
+
+ThemeChooser.defaultProps = {
+  style: {},
+  size: '',
+  change: () => {}
+};
 
 export default ThemeChooser;

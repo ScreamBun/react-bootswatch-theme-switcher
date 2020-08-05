@@ -32,7 +32,10 @@
     "assets/",
     "dist/"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@babel/runtime": "^7.10.5",
+    "prop-types": "^15.7.2"
+  },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.0",

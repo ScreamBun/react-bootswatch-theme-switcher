@@ -9,7 +9,7 @@ const csso = require('csso');
 const ROOT_DIR = path.join(__dirname, '..');
 const SOURCE_DIR = path.join(ROOT_DIR, 'src');
 const THEME_DIR = path.join(SOURCE_DIR, 'themes');
-const CHECK_DIRS = ['assets', 'assets/css', 'assets/fonts'];
+const CHECK_DIRS = ['assets', 'assets', 'assets/fonts'];
 
 const THEME_API = 'https://bootswatch.com/api/4.json';
 const THEME_FONT_DIR = '/assets/';
