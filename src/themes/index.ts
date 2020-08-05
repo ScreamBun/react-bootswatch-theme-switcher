@@ -20,7 +20,9 @@ import superhero from './superhero';
 import united from './united';
 import yeti from './yeti';
 
-export default {
+export type ThemeName = 'cerulean'|'cosmo'|'cyborg'|'darkly'|'flatly'|'journal'|'litera'|'lumen'|'lux'|'materia'|'minty'|'pulse'|'sandstone'|'simplex'|'sketchy'|'slate'|'solar'|'spacelab'|'superhero'|'united'|'yeti';
+
+const Themes: Record<ThemeName, string> = {
 	cerulean,
 	cosmo,
 	cyborg,
@@ -43,3 +45,5 @@ export default {
 	united,
 	yeti
 };
+
+export default Themes;

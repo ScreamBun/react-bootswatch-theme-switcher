@@ -1,0 +1,128 @@
+/* eslint react/static-property-placement: 1 */
+import React, { Component, CSSProperties, MouseEvent } from 'react';
+import {
+  Button, ButtonDropdown, ButtonGroup, DropdownMenu, DropdownToggle
+} from 'reactstrap';
+import { ThemeContext } from './interfaces';
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.substring(1);
+
+//------------------------------------------------------------------------------
+// ThemeChooser Interfaces
+//------------------------------------------------------------------------------
+interface PropTypes {
+  style: { [key: string]: CSSProperties };
+  size: 'sm'|'lg'|'';
+  change: (theme: string) => void;
+}
+
+interface State {
+  listOpen: boolean;
+  currentTheme: string;
+  defaultTheme: string;
+}
+
+const defaultProps: PropTypes = {
+  style: {},
+  size: '',
+  change: () => {}
+};
+
+const Context = React.createContext<ThemeContext>({
+  defaultTheme: 'lumen',
+  themeSwitcher: undefined,
+  themes: [],
+  currentTheme: ''
+});
+
+//------------------------------------------------------------------------------
+// ThemeChooser Component
+//------------------------------------------------------------------------------
+class ThemeChooser extends Component<PropTypes, State> {
+  static contextType = Context;
+  static defaultProps = defaultProps;
+  context!: React.ContextType<typeof Context>;
+  themes: Array<string>;
+
+  constructor(props: PropTypes, context: ThemeContext) {
+    super(props, context);
+    this.onSelect = this.onSelect.bind(this);
+    this.toggleList = this.toggleList.bind(this);
+
+    // get themes from context and sort them for display
+    const { currentTheme, defaultTheme, themes } = this.context;
+    this.themes = [ ...themes ];
+    this.themes.sort();
+
+    this.state = {
+      listOpen: false,
+      currentTheme: currentTheme || '',
+      defaultTheme
+    };
+  }
+
+  onSelect(e: MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    const { currentTarget } = e;
+    if (currentTarget) {
+      this.setState({
+        currentTheme: currentTarget.getAttribute('data-theme') || ''
+      }, () => {
+        const { change } = this.props;
+        const { currentTheme } = this.state;
+        const { themeSwitcher } = this.context;
+        if (themeSwitcher) {
+          themeSwitcher.load(currentTheme);
+          if (change) {
+            change(currentTheme);
+          }
+        }
+      });
+    }
+  }
+
+  toggleList() {
+    this.setState(prevState => ({
+      listOpen: !prevState.listOpen
+    }));
+  }
+
+  render() {
+    const { size, style } = this.props;
+    const { currentTheme, defaultTheme, listOpen } = this.state;
+
+    const themes = this.themes.map(theme => {
+      return (
+        <Button
+          key={ theme }
+          color="info"
+          active={ theme === currentTheme }
+          data-theme={ theme }
+          onClick={ this.onSelect }
+        >
+          { `${theme === defaultTheme ? '* ' : ''}${capitalize(theme)}` }
+        </Button>
+      );
+    });
+
+    return (
+      <ButtonDropdown isOpen={ listOpen } toggle={ this.toggleList } style={ style }>
+        <DropdownToggle
+          caret
+          color='default'
+          size={ size }
+        >
+          Theme
+        </DropdownToggle>
+
+        <DropdownMenu className='p-0'>
+          <ButtonGroup vertical size={ size } className='w-100'>
+            { themes }
+          </ButtonGroup>
+        </DropdownMenu>
+      </ButtonDropdown>
+    );
+  }
+}
+
+export default ThemeChooser;

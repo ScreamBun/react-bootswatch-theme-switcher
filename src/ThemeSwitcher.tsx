@@ -1,9 +1,10 @@
+/* eslint react/static-property-placement: 1 */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import BootswatchThemes from './themes';
+import { ThemeContext } from './interfaces';
+import BootswatchThemes, { ThemeName } from './themes';
 import '../assets/loader.css';
 
-const setItem = (key, obj) => {
+const setItem = (key: string, obj: any): void => {
   if (!key) return;
   try {
     localStorage.setItem(key, JSON.stringify(obj));
@@ -12,10 +13,11 @@ const setItem = (key, obj) => {
   }
 };
 
-const getItem = key => {
+const getItem = (key: string): any => {
   if (!key) return null;
   try {
     const item = localStorage.getItem(key);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return item ? JSON.parse(item) : null;
   } catch (err) {
     return null;
@@ -23,10 +25,47 @@ const getItem = key => {
 };
 
 //------------------------------------------------------------------------------
+// ThemeChooser Interfaces
+//------------------------------------------------------------------------------
+interface PropTypes {
+  defaultTheme: string;
+  storeThemeKey: string;
+  themes?: { [theme: string]: string };
+  themeOptions?: Array<string>;
+  children: HTMLElement
+}
+
+interface State {
+  currentTheme: string;
+  customThemes: { [theme: string]: string };
+  theme: string;
+  themeOptions: Set<string>;
+}
+
+const defaultProps = {
+  defaultTheme: 'lumen',
+  storeThemeKey: null,
+  themes: {},
+  themeOptions: BootswatchThemes,
+  children: null
+};
+
+const Context = React.createContext<ThemeContext>({
+  defaultTheme: 'lumen',
+  themeSwitcher: undefined,
+  themes: [],
+  currentTheme: ''
+});
+
+//------------------------------------------------------------------------------
 // Top level ThemeSwitcher Component
 //------------------------------------------------------------------------------
-class ThemeSwitcher extends Component {
-  constructor(props, context) {
+class ThemeSwitcher extends Component<PropTypes, State> {
+  static contextType = Context;
+  static defaultProps = defaultProps;
+  context!: React.ContextType<typeof Context>;
+
+  constructor(props: PropTypes, context: ThemeContext) {
     super(props, context);
     this.getTheme = this.getTheme.bind(this);
     this.load = this.load.bind(this);
@@ -37,10 +76,10 @@ class ThemeSwitcher extends Component {
     } = this.props;
 
     const BootswatchNames = Object.keys(BootswatchThemes);
-    const validThemeOptions = new Set(themeOptions.filter(t => BootswatchNames.includes(t)));
+    const validThemeOptions = new Set((themeOptions || []).filter(t => BootswatchNames.includes(t)));
     const customThemes = themes || {};
 
-    const defTheme = getItem(storeThemeKey) || defaultTheme;
+    const defTheme = getItem(storeThemeKey) as string || defaultTheme;
     validThemeOptions.add(defTheme);
     Object.keys(customThemes).forEach(theme => {
       validThemeOptions.add(theme);
@@ -54,15 +93,10 @@ class ThemeSwitcher extends Component {
     };
   }
 
-  componentDidMount() {
-    const { currentTheme } = this.state;
-    this.load(currentTheme);
-  }
-
   // pass reference to this down to ThemeChooser component
-  getChildContext() {
-    const { defaultTheme, themeOptions } = this.props;
-    const { currentTheme } = this.state;
+  getChildContext(): ThemeContext {
+    const { defaultTheme } = this.props;
+    const { currentTheme, themeOptions } = this.state;
 
     return {
       defaultTheme,
@@ -72,28 +106,33 @@ class ThemeSwitcher extends Component {
     };
   }
 
+  componentDidMount() {
+    const { currentTheme } = this.state;
+    this.load(currentTheme);
+  }
+
   setTheme() {
     const { theme } = this.state;
-    let themeStyles = document.querySelector('style#themeStyles') || document.createElement("style");
+    const themeStyles: HTMLStyleElement = document.querySelector('style#themeStyles') || document.createElement('style');
     if (themeStyles.id !== 'themeStyles') {
-      themeStyles.type = 'text/css';
       themeStyles.id = 'themeStyles';
+      themeStyles.type = 'text/css';
     }
     document.head.append(themeStyles);
     themeStyles.innerHTML = theme;
   }
 
-  getTheme(theme) {
+  getTheme(theme: string): string {
     const { customThemes, themeOptions } = this.state;
     if (Object.keys(customThemes).includes(theme)) {
       return customThemes[theme];
     } else if (themeOptions.has(theme)) {
-      return BootswatchThemes[theme];
+      return BootswatchThemes[theme as ThemeName];
     }
-    return '';    
+    return '';
   }
 
-  load(theme) {
+  load(theme: string) {
     const themeStyles = this.getTheme(theme);
     if (themeStyles) {
       const { storeThemeKey } = this.props;
@@ -135,28 +174,5 @@ class ThemeSwitcher extends Component {
     return children || <span />;
   }
 }
-
-ThemeSwitcher.childContextTypes = {
-  defaultTheme: PropTypes.string,
-  themeSwitcher: PropTypes.instanceOf(ThemeSwitcher),
-  themes: PropTypes.array,
-  currentTheme: PropTypes.string
-};
-
-ThemeSwitcher.propTypes = {
-  defaultTheme: PropTypes.string,
-  storeThemeKey: PropTypes.string,
-  themes: PropTypes.object,
-  themeOptions: PropTypes.array,
-  children: PropTypes.element
-};
-
-ThemeSwitcher.defaultProps = {
-  defaultTheme: 'lumen',
-  storeThemeKey: null,
-  themes: {},
-  themeOptions: BootswatchThemes,
-  children: null
-};
 
 export default ThemeSwitcher;

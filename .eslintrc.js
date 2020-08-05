@@ -1,4 +1,9 @@
 module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking'
+  ],
   env: {
     browser: true,
     es6: true,

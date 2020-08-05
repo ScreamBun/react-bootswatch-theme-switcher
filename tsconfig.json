@@ -25,6 +25,7 @@
     "declaration": true,
     "removeComments": true,
     "jsx": "react",
+    "rootDir": "src",
     "outDir": "dist"
   },
   "exclude": [
