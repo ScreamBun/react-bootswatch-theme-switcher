@@ -179,7 +179,7 @@ ThemeSwitcher.childContextTypes = {
 
 ThemeSwitcher.defaultProps = {
   defaultTheme: 'lumen',
-  storeThemeKey: '',
+  storeThemeKey: 'theme',
   themes: {},
   themeOptions: Object.keys(BootswatchThemes),
   children: null

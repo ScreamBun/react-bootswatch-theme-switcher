@@ -15,13 +15,13 @@ Update Demos
 ### Install
 
 ```
-npm install czack425/react-bootswatch-theme-switcher
+npm install https://github.com/czack425/react-bootswatch-theme-switcher.git
 ```
 ### Setup
 The theme switcher works by dynamically modifying the document's style element to switch between the Bootswatch themes. There are two components:
 
  * A ```ThemeSwitcher``` component that wraps your top-level component. This is responsible for theme loading and hiding your app during the load.
- * A ```ThemeChooser``` component that displays a dropdown button select menu allowing the user to choose a theme.
+ * A ```ThemeChooser``` component that displays a dropdown select menu allowing the user to choose a theme.
 
 The ThemeSwitcher will make sure your app is not displayed until the selected theme is loaded, and will also hide it whenever the ThemeChooser selects a new theme. Here is an example of an app that uses the Redux Provider and React Router rendered in index.js:
 
@@ -38,30 +38,29 @@ render(
     </Provider>, document.getElementById('app')
 );
 ```
-**NOTE:** You can wrap any top level component with the ```ThemeSwitcher``` *except* for ```Provider``` (Router or any other component is fine). ```Provider``` is special, and you'll get a blank screen if you place it inside the ```ThemeSwitcher```.
 
 To let users swich themes add the ```ThemeChooser``` to one of your pages (e.g. a Settings page). The ```ThemeChooser``` gets passed a reference to the ```ThemeSwitcher``` via the ```React Context``` mechanism, so it can trigger a re-render and not display the children components during theme unloading and reloading.
 
 ###ThemeSwitcher props
-* ```defaultTheme``` - default theme to use if user has not selected one (default ```'lumen'```)
-* ```storeThemeKey``` - name of localStorage key used to save the last theme (default ```theme```)
-* ```themes``` - named array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```null```)
-* ```themeOptions``` -  array of themes to display in the ```ThemeChooser``` (default is all Bootswatch themes)
+* ```defaultTheme``` - Default theme to use if user has not selected one (default ```'lumen'```)
+* ```storeThemeKey``` - Name of localStorage key used to save the last theme (default ```theme```)
+* ```themes``` - Array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```{}```)
+* ```themeOptions``` -  Array of theme names that can be selected & shown in the ```ThemeChooser``` (default is all Bootswatch themes)
 
 ###ThemeChooser props
-* ```style``` - custom styles to apply to the ```ThemeChooser``` (default ```{}```)
-* ```size``` - size of the ```ThemeChooser```, one of (xs, sm, md, lg) (default ```""```)
-* ```change``` - function called when the theme is changed  (default ```null```)
+* ```style``` - Custom styles to apply to the ```ThemeChooser``` (default ```{}```)
+* ```size``` - Size of the ```ThemeChooser```, one of (sm, lg) (default ```''```)
+* ```change``` - Function called when the theme is changed  (default ```null```)
 
 
 ### Theme files (and required Bootstrap and JQuery javascript)
 
 - For convenience the theme switcher comes bundled with the [Bootswatch](https://bootswatch.com/) themes and dependent fontfaces. These files MUST be copied to your distribution folder of your Web server.
 
-- The theme switcher will add and remove themes by changing the style of the document. For example, all theme styles will be places in the documents style tag with the data-type attribute of theme.
+- The theme switcher will add and remove themes by changing the style of the document. For example, all theme styles will be places in the documents style tag with the id attribute of `themeStyles`.
 
 ```
-<style type="text/css" data-type="theme">
+<style id="themeStyles" type="text/css">
 	THEME STYLES...
 </style>
 ```
@@ -76,7 +75,7 @@ export default {
   plugins: [
     new CopyWebpackPlugin([
       { // Theme Assets
-        from: "node_modules/react-bootstwatch-theme-switcher/src/assets/",
+        from: "node_modules/react-bootstwatch-theme-switcher/assets/",
         to: "assets/",
         toType: "dir"
       }
@@ -86,7 +85,7 @@ export default {
 
 ### Auto reload last theme used
 
-If you want the last theme used to be automatically loaded in the future you can provide the ThemeSwitcher with the name of a localStorage key to use to save the theme name:
+If you want the last theme used to be automatically loaded using a custom theme key in the future you can provide the ThemeSwitcher with the name of a localStorage key:
 
 ```javascript
 <ThemeSwitcher defaultTheme="yeti" storeThemeKey="theme" />
@@ -107,7 +106,6 @@ render(
     </Provider>, document.getElementById('app')
 );
 ```
-Use the lower case theme names, the ```ThemeChooser``` will capitalize them and show them in alphabetical order.
 
 #### Credit
 - This is an updated variation of the [react-bootstrap-theme-switcher](https://github.com/raythree/react-bootstrap-theme-switcher) by raythee
