@@ -29,7 +29,8 @@
     "declaration": true,
     "removeComments": true,
     "jsx": "react",
-    "rootDir": "src"
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "exclude": [
     ".eslintrc.js",
