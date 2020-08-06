@@ -1,3 +1,6 @@
+### [1.0.8]
+* Update components to Typescript
+
 ### [1.0.7]
 * Themes are saved/loaded from js files for faster switching
 * Theme specific files (fonts) are saved locally for faster switching 
