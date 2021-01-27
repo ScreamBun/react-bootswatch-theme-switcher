@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 const path = require('path');
-const fs = require('fs-extra');
-const NamedRegExp = require('named-regexp-groups');
-const download = require('download-file');
-const request = require('sync-request');
 const csso = require('csso');
+const fs = require('fs');
+const GetGoogleFonts = require('get-google-fonts');
+const download = require('download-file-sync');
+const NamedRegExp = require('named-regexp-groups');
+const request = require('sync-request');
+const querystring = require('querystring');
+
 
 const ROOT_DIR = path.join(__dirname, '..');
 const SOURCE_DIR = path.join(ROOT_DIR, 'src');
@@ -16,12 +19,13 @@ const THEME_FONT_DIR = '/assets/';
 const THEME_FONT_URL = 'assets/';
 
 const CSS_URL_IMPORT = new NamedRegExp(/^@import url\(["'](:<url>.*?)["']\);\s*?$/);
-const FILE_URL_IMPORT = new NamedRegExp(/\s*?src:( local\(.*?\),)? local\(['"](:<name>.*?)['"]\), url\(['"]?(:<url>.*?)['"]?\) format\(['"](:<format>.*?)['"]\);/);
+// const FILE_URL_IMPORT = new NamedRegExp(/\s*?src:( local\(.*?\),)? local\(['"](:<name>.*?)['"]\), url\(['"]?(:<url>.*?)['"]?\) format\(['"](:<format>.*?)['"]\);/);
+const FILE_URL_IMPORT = new NamedRegExp(/\s*?src:(.*?url\(['"]?(:<url>.*?)['"]?\).*);/);
 const URL_REPLACE = new NamedRegExp(/url\(['"]?(:<url>.*?)['"]?\)/);
 
 CHECK_DIRS.forEach(d => {
   const dir = path.join(ROOT_DIR, d);
-  if (!fs.pathExistsSync(dir)) {
+  if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
 });
@@ -40,8 +44,19 @@ BootswatchThemes.themes.forEach(theme => {
 
   let preProcessCss = [];
   const css = request('GET', theme.css).getBody('utf8');
+
+  // Imported items
   css.split(/\n\r?/gm).forEach(line => {
-    if (line.startsWith('@import url(')) {
+    if (line.startsWith('@import url("https://fonts.googleapis.com')){
+      const ext_url = new NamedRegExp(/\s*?@import url(\(['"]?(:<url>.*?)['"]?\));/).exec(line).groups.url;
+      const args = querystring.parse(ext_url.split('?').pop());
+      const family = args.family.split(':').reverse().pop().replace(/[|\s]/g, '_');
+      new GetGoogleFonts({
+        cssFile: `${theme.name}-${family}.css`,
+        outputDir:  path.join(ROOT_DIR, THEME_FONT_DIR, 'fonts')
+      }).download(ext_url)
+      preProcessCss.push(`@import url('${THEME_FONT_URL}fonts/${theme.name}-${family}.css');`);
+    } else if (line.startsWith('@import url(')) {
       const cssImportURL = line.replace(CSS_URL_IMPORT, '$+{url}');
       const cssImport = request('GET', cssImportURL).getBody('utf8');
 
@@ -55,22 +70,16 @@ BootswatchThemes.themes.forEach(theme => {
   // set imports to local & download files
   const postProcessCss = preProcessCss.map(line => {
     let processedLine = line;
-    if (line.match(/\s*?src:.*url\(["']?https?:\/\/.*/) && !line.startsWith('/*')) {
-      const src = FILE_URL_IMPORT.exec(line).groups;
-      const ext = path.extname(src.url);
-      const fileName = `fonts/${src.name}${ext}`;
+    if (line.match(/\s*?src:.*?url\(["']?https?:\/\/.*/) && !line.startsWith('/*')) {
+      const ext_url = FILE_URL_IMPORT.exec(line).groups.url;
+      const ext_file = ext_url.split(/\//g).pop()
+      const font_file = path.join(ROOT_DIR, THEME_FONT_DIR, 'fonts', ext_file);
 
-      if (!fs.existsSync(path.join(ROOT_DIR, THEME_FONT_DIR, fileName))) {
-        const opts = {
-          directory: path.join(ROOT_DIR, THEME_FONT_DIR, 'fonts'),
-          filename: src.name + ext
-        };
-        download(src.url, opts, err => {
-          if (err) throw err;
-          console.log(`Downloaded reference: ${opts.filename}`);
-        });
+      if (!fs.existsSync(font_file)) {
+        fs.writeFileSync(font_file, download(ext_url));
+        console.log(`Downloaded reference: ${opts.filename}`);
       }
-      processedLine = processedLine.replace(URL_REPLACE, `url('/${THEME_FONT_URL}${fileName}')`);
+      processedLine = processedLine.replace(URL_REPLACE, `url('/${THEME_FONT_URL}${ext_file}')`);
     }
 
     processedLine = processedLine.replace(/\\[^\\]/g, '\\\\');
