@@ -1,7 +1,5 @@
 /* eslint react/static-property-placement: 1 */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { ThemeContext } from './interfaces';
 import BootswatchThemes, { ThemeName } from './themes';
 // import '../assets/loader.css';
 
@@ -43,7 +41,15 @@ interface ThemeSwitcherState {
   themeOptions: Set<string>;
 }
 
-const ThemeSwitcherContext = React.createContext<ThemeContext>({
+export interface ThemeContext {
+  defaultTheme: string;
+  // eslint-disable-next-line no-use-before-define
+  themeSwitcher?: ThemeSwitcher;
+  themes: Array<string>;
+  currentTheme: string;
+}
+
+export const ThemeSwitcherContext = React.createContext<ThemeContext>({
   defaultTheme: 'lumen',
   themeSwitcher: undefined,
   themes: [],
@@ -53,14 +59,19 @@ const ThemeSwitcherContext = React.createContext<ThemeContext>({
 //------------------------------------------------------------------------------
 // Top level ThemeSwitcher Component
 //------------------------------------------------------------------------------
-class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
-  static childContextTypes: Record<string, any>;
-  static contextType = ThemeSwitcherContext;
-  static defaultProps: ThemeSwitcherProps;
-  context!: React.ContextType<typeof ThemeSwitcherContext>;
+const DefaultProps: ThemeSwitcherProps = {
+  defaultTheme: 'lumen',
+  storeThemeKey: '',
+  themes: {},
+  themeOptions: Object.keys(BootswatchThemes),
+  children: null
+};
 
-  constructor(props: ThemeSwitcherProps, context: ThemeContext) {
-    super(props, context);
+class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
+  static defaultProps = DefaultProps;
+
+  constructor(props: ThemeSwitcherProps) {
+    super(props);
     this.getTheme = this.getTheme.bind(this);
     this.load = this.load.bind(this);
     this.setTheme = this.setTheme.bind(this);
@@ -87,19 +98,6 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
     };
   }
 
-  // pass reference to this down to ThemeChooser component
-  getChildContext(): ThemeContext {
-    const { defaultTheme } = this.props;
-    const { currentTheme, themeOptions } = this.state;
-
-    return {
-      defaultTheme,
-      themeSwitcher: this,
-      themes: Array.from(themeOptions),
-      currentTheme
-    };
-  }
-
   componentDidMount() {
     const { currentTheme } = this.state;
     this.load(currentTheme);
@@ -114,6 +112,19 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
     }
     document.head.append(themeStyles);
     themeStyles.innerHTML = theme;
+  }
+
+  // pass reference to this down to ThemeChooser component
+  getContext(): ThemeContext {
+    const { defaultTheme } = this.props;
+    const { currentTheme, themeOptions } = this.state;
+
+    return {
+      defaultTheme,
+      themeSwitcher: this,
+      themes: Array.from(themeOptions),
+      currentTheme
+    };
   }
 
   getTheme(theme: string): string {
@@ -165,24 +176,12 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
       );
     }
     const { children } = this.props;
-    return children || <span />;
+    return (
+      <ThemeSwitcherContext.Provider value={ this.getContext() }>
+        { children }
+      </ThemeSwitcherContext.Provider>
+    );
   }
 }
-
-// Static Properties
-ThemeSwitcher.childContextTypes = {
-  defaultTheme: PropTypes.string.isRequired,
-  themeSwitcher: PropTypes.instanceOf(ThemeSwitcher).isRequired,
-  themes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  currentTheme: PropTypes.string.isRequired
-};
-
-ThemeSwitcher.defaultProps = {
-  defaultTheme: 'lumen',
-  storeThemeKey: 'theme',
-  themes: {},
-  themeOptions: Object.keys(BootswatchThemes),
-  children: null
-};
 
 export default ThemeSwitcher;

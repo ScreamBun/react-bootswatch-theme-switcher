@@ -1,7 +1,6 @@
 /* eslint import/no-unresolved: off, import/no-self-import: off */
 import path from 'path';
 import webpack from 'webpack';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 const NODE_ENV = 'production';
 const ROOT_DIR = path.join(__dirname, '..');
@@ -27,9 +26,6 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       NODE_ENV
-    }),
-    new CleanWebpackPlugin({
-      dry: false
     })
   ],
   optimization: {
@@ -66,8 +62,5 @@ module.exports = {
         }
       }
     ]
-  },
-  node: {
-    fs: 'empty'
   }
 };

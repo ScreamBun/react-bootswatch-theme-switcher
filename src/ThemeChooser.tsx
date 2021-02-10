@@ -1,11 +1,9 @@
 /* eslint react/static-property-placement: 1 */
 import React, { Component, CSSProperties, MouseEvent } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button, ButtonDropdown, ButtonGroup, DropdownMenu, DropdownToggle
 } from 'reactstrap';
-import { ThemeContext } from './interfaces';
-import ThemeSwitcher from './ThemeSwitcher';
+import { ThemeContext, ThemeSwitcherContext } from './ThemeSwitcher';
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.substring(1);
 
@@ -13,9 +11,9 @@ const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.substring(1);
 // ThemeChooser Interfaces
 //------------------------------------------------------------------------------
 interface ThemeChooserProps {
-  style: { [key: string]: CSSProperties };
-  size: 'sm'|'lg'|'';
-  change: (theme: string) => void;
+  style?: { [key: string]: CSSProperties };
+  size?: 'sm'|'lg'|'';
+  change?: (theme: string) => void;
 }
 
 interface ThemeChooserState {
@@ -28,8 +26,8 @@ interface ThemeChooserState {
 // ThemeChooser Component
 //------------------------------------------------------------------------------
 class ThemeChooser extends Component<ThemeChooserProps, ThemeChooserState> {
-  static contextTypes: Record<string, any>;
-  static defaultProps: ThemeChooserProps;
+  static contextType = ThemeSwitcherContext;
+  declare context: React.ContextType<typeof ThemeSwitcherContext>;
   themes: Array<string>;
 
   constructor(props: ThemeChooserProps, context: ThemeContext) {
@@ -94,11 +92,11 @@ class ThemeChooser extends Component<ThemeChooserProps, ThemeChooserState> {
     });
 
     return (
-      <ButtonDropdown isOpen={ listOpen } toggle={ this.toggleList } style={ style }>
+      <ButtonDropdown isOpen={ listOpen } toggle={ this.toggleList } style={ style || {} }>
         <DropdownToggle
           caret
           color='default'
-          size={ size }
+          size={ size || '' }
         >
           Theme
         </DropdownToggle>
@@ -112,19 +110,5 @@ class ThemeChooser extends Component<ThemeChooserProps, ThemeChooserState> {
     );
   }
 }
-
-// Static Properties
-ThemeChooser.contextTypes = {
-  defaultTheme: PropTypes.string.isRequired,
-  themeSwitcher: PropTypes.instanceOf(ThemeSwitcher).isRequired,
-  themes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  currentTheme: PropTypes.string.isRequired
-};
-
-ThemeChooser.defaultProps = {
-  style: {},
-  size: '',
-  change: () => {}
-};
 
 export default ThemeChooser;
