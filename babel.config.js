@@ -27,7 +27,7 @@ module.exports = api => {
     plugins: [
       // Stage 0
       // require('@babel/plugin-proposal-function-bind'),
-      [require('@babel/plugin-transform-runtime'), { polyfill: false, regenerator: true }],
+      [require('@babel/plugin-transform-runtime'), { regenerator: true }],
       /*
       // Stage 1
       require('@babel/plugin-proposal-export-default-from'),
