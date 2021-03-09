@@ -1,148 +1,148 @@
 // react Rules
 module.exports = {
   'react/boolean-prop-naming': [0, {
-    'message': '',
-    'propTypeNames': ['bool', 'mutuallyExclusiveTrueProps'],
-    'rule': '^(is|has)[A-Z]([A-Za-z0-9]?)+'
+    message: '',
+    propTypeNames: ['bool', 'mutuallyExclusiveTrueProps'],
+    rule: '^(is|has)[A-Z]([A-Za-z0-9]?)+'
   }],
   'react/button-has-type': [2, {
-    'button': true,
-    'reset': false,
-    'submit': true
+    button: true,
+    reset: false,
+    submit: true
   }],
   'react/default-props-match-prop-types': [2, {
-    'allowRequiredDefaults': false
+    allowRequiredDefaults: false
   }],
   'react/destructuring-assignment': [2, 'always'],
-  'react/display-name': [1, {
-    'ignoreTranspilerName': false
+  'react/display-name': [0, {
+    ignoreTranspilerName: false
   }],
   'react/forbid-component-props': [0, {
-    'forbid': []
+    forbid: []
   }],
   'react/forbid-dom-props': [0, {
-    'forbid': []
+    forbid: []
   }],
   'react/forbid-elements': [0, {
-    'forbid': []
+    forbid: []
   }],
   'react/forbid-foreign-prop-types': [1, {
-    'allowInPropTypes': true
+    allowInPropTypes: true
   }],
   'react/forbid-prop-types': [2, {
-    'checkChildContextTypes': true,
-    'checkContextTypes': true,
-    'forbid': ['any']
+    checkChildContextTypes: true,
+    checkContextTypes: true,
+    forbid: ['any']
   }],
   'react/function-component-definition': [0, {
-    'namedComponents': 'function-expression',
-    'unnamedComponents': 'function-expression'
+    namedComponents: 'function-expression',
+    unnamedComponents: 'function-expression'
   }],
   'react/jsx-boolean-value': [2, 'never', {
-    'always': []
+    always: []
   }],
   'react/jsx-child-element-spacing': 0,
   'react/jsx-closing-bracket-location': [2, 'line-aligned'],
   'react/jsx-closing-tag-location': 2,
   'react/jsx-curly-brace-presence': [2, {
-    'children': 'never',
-    'props': 'never'
+    children: 'never',
+    props: 'never'
   }],
   'react/jsx-curly-newline': [2, {
-    'multiline': 'consistent',
-    'singleline': 'consistent'
+    multiline: 'consistent',
+    singleline: 'consistent'
   }],
   'react/jsx-curly-spacing': [2, 'always', {
-    'allowMultiline': true,
-    'spacing': {
-	    'objectLiterals': 'never'
+    allowMultiline: true,
+    spacing: {
+      objectLiterals: 'never'
     }
   }],
   'react/jsx-equals-spacing': [2, 'never'],
   'react/jsx-filename-extension': [2, {
-    'extensions': ['.jsx', '.tsx']
+    extensions: ['.jsx', '.tsx']
   }],
   'react/jsx-first-prop-new-line': [2, 'multiline-multiprop'],
   'react/jsx-fragments': [2, 'syntax'],
   'react/jsx-handler-names': [0, {
-    'eventHandlerPrefix': 'handle',
-    'eventHandlerPropPrefix': 'on'
+    eventHandlerPrefix: 'handle',
+    eventHandlerPropPrefix: 'on'
   }],
   'react/jsx-indent': [2, 2],
   'react/jsx-indent-props': [2, 2],
   'react/jsx-key': 2,
   'react/jsx-max-depth': 0,
   'react/jsx-max-props-per-line': [2, {
-    'maximum': 1,
-    'when': 'multiline'
+    maximum: 1,
+    when: 'multiline'
   }],
   'react/jsx-no-bind': [2, {
-    'allowArrowFunctions': true,
-    'allowBind': false,
-    'allowFunctions': false,
-    'ignoreDOMComponents': true,
-    'ignoreRefs': true
+    allowArrowFunctions: true,
+    allowBind: false,
+    allowFunctions: false,
+    ignoreDOMComponents: true,
+    ignoreRefs: true
   }],
   'react/jsx-no-comment-textnodes': 2,
   'react/jsx-no-duplicate-props': [2, {
-    'ignoreCase': true
+    ignoreCase: true
   }],
   'react/jsx-no-literals': [0, {
-    'noStrings': true
+    noStrings: true
   }],
   'react/jsx-no-script-url': [0, [
     {
-      'name': 'Link',
-      'props': ['to']
+      name: 'Link',
+      props: ['to']
     }
   ]],
   'react/jsx-no-target-blank': [2, {
-    'enforceDynamicLinks': 'always'
+    enforceDynamicLinks: 'always'
   }],
   'react/jsx-no-undef': 2,
   'react/jsx-no-useless-fragment': 0,
   'react/jsx-one-expression-per-line': [2, {
-    'allow': 'single-child'
+    allow: 'single-child'
   }],
   'react/jsx-pascal-case': [2, {
-    'allowAllCaps': true,
-    'ignore': []
+    allowAllCaps: true,
+    ignore: []
   }],
   'react/jsx-props-no-multi-spaces': 2,
   'react/jsx-props-no-spreading': [2, {
-    'custom': 'ignore',
-    'exceptions': [],
-    'html': 'enforce'
+    custom: 'ignore',
+    exceptions: [],
+    html: 'enforce'
   }],
   'react/jsx-sort-default-props': [0, {
-    'ignoreCase': true
+    ignoreCase: true
   }],
   'react/jsx-sort-prop-types': 0,
   'react/jsx-sort-props': [0, {
-    'callbacksLast': false,
-    'ignoreCase': true,
-    'noSortAlphabetically': false,
-    'reservedFirst': true,
-    'shorthandFirst': false,
-    'shorthandLast': false
+    callbacksLast: false,
+    ignoreCase: true,
+    noSortAlphabetically: false,
+    reservedFirst: true,
+    shorthandFirst: false,
+    shorthandLast: false
   }],
   'react/jsx-space-before-closing': [0, 'always'],
   'react/jsx-tag-spacing': [2, {
-    'afterOpening': 'never',
-    'beforeClosing': 'allow',
-    'beforeSelfClosing': 'always',
-    'closingSlash': 'never'
+    afterOpening: 'never',
+    beforeClosing: 'allow',
+    beforeSelfClosing: 'always',
+    closingSlash: 'never'
   }],
   'react/jsx-uses-react': 2,
   'react/jsx-uses-vars': 2,
   'react/jsx-wrap-multilines': [2, {
-    'arrow': 'parens-new-line',
-    'assignment': 'parens-new-line',
-    'condition': 'parens-new-line',
-    'declaration': 'parens-new-line',
-    'logical': 'parens-new-line',
-    'prop': 'parens-new-line',
-    'return': 'parens-new-line'
+    arrow: 'parens-new-line',
+    assignment: 'parens-new-line',
+    condition: 'parens-new-line',
+    declaration: 'parens-new-line',
+    logical: 'parens-new-line',
+    prop: 'parens-new-line',
+    return: 'parens-new-line'
   }],
   'react/no-access-state-in-setstate': 2,
   'react/no-adjacent-inline-elements': 0,
@@ -167,33 +167,33 @@ module.exports = {
   'react/no-unknown-property': 2,
   'react/no-unsafe': 0,
   'react/no-unused-prop-types': [2, {
-    'customValidators': [],
-    'skipShapeProps': true
+    customValidators: [],
+    skipShapeProps: true
   }],
   'react/no-unused-state': 2,
   'react/no-will-update-set-state': 2,
   'react/prefer-es6-class': [2, 'always'],
   'react/prefer-read-only-props': 0,
   'react/prefer-stateless-function': [2, {
-    'ignorePureComponents': true
+    ignorePureComponents: true
   }],
   'react/prop-types': [2, {
-    'customValidators': [],
-    'ignore': [],
-    'skipUndeclared': false
+    customValidators: [],
+    ignore: [],
+    skipUndeclared: false
   }],
   'react/react-in-jsx-scope': 2,
   'react/require-default-props': [2, {
-    'forbidDefaultForRequired': true
+    forbidDefaultForRequired: true
   }],
   'react/require-optimization': [0, {
-    'allowDecorators': []
+    allowDecorators: []
   }],
   'react/require-render-return': 2,
   'react/self-closing-comp': 2,
   'react/sort-comp': [2, {
-    'groups': {
-      'lifecycle': [
+    groups: {
+      lifecycle: [
         'displayName',
         'propTypes',
         'contextTypes',
@@ -220,9 +220,9 @@ module.exports = {
         'componentDidCatch',
         'componentWillUnmount'
       ],
-      'rendering': ['/^render.+$/', 'render']
+      rendering: ['/^render.+$/', 'render']
     },
-    'order': [
+    order: [
       'static-variables',
       'static-methods',
       'instance-variables',
@@ -237,10 +237,10 @@ module.exports = {
     ]
   }],
   'react/sort-prop-types': [0, {
-    'callbacksLast': false,
-    'ignoreCase': true,
-    'requiredFirst': false,
-    'sortShapeProp': true
+    callbacksLast: false,
+    ignoreCase: true,
+    requiredFirst: false,
+    sortShapeProp: true
   }],
   'react/state-in-constructor': [2, 'always'],
   'react/static-property-placement': [2, 'property assignment'],

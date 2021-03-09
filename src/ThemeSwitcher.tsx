@@ -30,8 +30,7 @@ interface ThemeSwitcherProps {
   defaultTheme: string;
   storeThemeKey: string;
   themes?: { [theme: string]: string };
-  themeOptions?: Array<string>;
-  children: null|HTMLElement
+  themeOptions?: Array<string>
 }
 
 interface ThemeSwitcherState {
@@ -63,8 +62,7 @@ const DefaultProps: ThemeSwitcherProps = {
   defaultTheme: 'lumen',
   storeThemeKey: '',
   themes: {},
-  themeOptions: Object.keys(BootswatchThemes),
-  children: null
+  themeOptions: Object.keys(BootswatchThemes)
 };
 
 class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
@@ -131,7 +129,8 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
     const { customThemes, themeOptions } = this.state;
     if (Object.keys(customThemes).includes(theme)) {
       return customThemes[theme];
-    } else if (themeOptions.has(theme)) {
+    }
+    if (themeOptions.has(theme)) {
       return BootswatchThemes[theme as ThemeName];
     }
     return '';
