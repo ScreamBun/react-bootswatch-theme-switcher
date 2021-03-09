@@ -1,54 +1,61 @@
 module.exports = {
   extends: [
-    'eslint:recommended',
+    'airbnb-typescript',
+    'plugin:react/recommended',
+    'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    'plugin:jest/recommended',
+    'plugin:promise/recommended',
+    'plugin:compat/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
+    'prettier/@typescript-eslint',
+    'prettier/react'
   ],
   env: {
-    browser: true,
-    es6: true,
-    node: true
+    browser: true
   },
   globals: {
     JSX: true,
     React: true
   },
+  overrides: [
+    {
+        files: ["**/*.tsx"],
+        rules: {
+            "react/prop-types": 0
+        }
+    }
+  ],
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
-    warnOnUnsupportedTypeScriptVersion: false
+    createDefaultProgram: true
   },
-  plugins: [
-    '@typescript-eslint',
-    'compat',
-    'eslint-comments',
-    'eslint-plugin',
-    'import',
-    'promise',
-    'react'
-  ],
+  rules: {
+    /*
+     * 'off' or 0 - turn the rule off
+     * 'warn' or 1 - turn the rule on as a warning (doesn't affect exit code)
+     * 'error' or 2 - turn the rule on as an error (exit code is 1 when triggered)
+     */
+    // eslint-disable-next-line global-require
+    ...require('./config/eslint_rules'),
+    'import/extensions': 0,
+    // A temporary hack related to IDE not resolving correct package.json
+    'import/no-extraneous-dependencies': 0
+  },
   settings: {
-    'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx']
-    },
     'import/resolver': {
       // See https://github.com/benmosher/eslint-plugin-import/issues/1396#issuecomment-575727774 for line below
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      node: {},
+      react: {
+        version: 'detect'
       },
       webpack: {
         config: require.resolve('./config/config.eslint.js')
       }
     }
-  },
-  rules: {
-    // eslint-disable-next-line global-require
-    ...require('./config/eslint_rules'),
-    'import/extensions': 0,
-    // temp silence of cyclic dependencies
-    'import/no-cycle': 1
   }
 };

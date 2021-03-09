@@ -1,4 +1,4 @@
-// Promise Rules
+// promise Rules
 module.exports = {
   'promise/always-return': 2,
   'promise/avoid-new': 0,
@@ -10,5 +10,6 @@ module.exports = {
   'promise/no-promise-in-callback': 1,
   'promise/no-return-in-finally': 1,
   'promise/no-return-wrap': 2,
-  'promise/param-names': 2
-}
+  'promise/param-names': 2,
+  'promise/valid-params': 1
+};
