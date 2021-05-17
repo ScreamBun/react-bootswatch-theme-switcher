@@ -18,8 +18,6 @@ const THEME_API = 'https://bootswatch.com/api/4.json';
 const THEME_FONT_DIR = '/assets/';
 const THEME_FONT_URL = 'assets/';
 
-const CSS_URL_IMPORT = new NamedRegExp(/^@import url\(["'](:<url>.*?)["']\);\s*?$/);
-// const FILE_URL_IMPORT = new NamedRegExp(/\s*?src:( local\(.*?\),)? local\(['"](:<name>.*?)['"]\), url\(['"]?(:<url>.*?)['"]?\) format\(['"](:<format>.*?)['"]\);/);
 const FILE_URL_IMPORT = new NamedRegExp(/\s*?src:(.*?url\(['"]?(:<url>.*?)['"]?\).*);/);
 const URL_REPLACE = new NamedRegExp(/url\(['"]?(:<url>.*?)['"]?\)/);
 
@@ -40,31 +38,22 @@ BootswatchThemes.themes.forEach(theme => {
   themeNames.push(themeName);
 
   const themeFile = fs.createWriteStream(path.join(THEME_DIR, `${themeName}.ts`), {flags: 'w'});
-  themeFile.write(`// Theme: ${themeName}\n\n`);
-
-  let preProcessCss = [];
+  themeFile.write(`// Theme: ${theme.name}\n`);
   const css = request('GET', theme.css).getBody('utf8');
 
   // Imported items
-  css.split(/\n\r?/gm).forEach(line => {
+  const preProcessCss = css.split(/\n\r?/gm).map(line => {
     if (line.startsWith('@import url("https://fonts.googleapis.com')){
       const ext_url = new NamedRegExp(/\s*?@import url(\(['"]?(:<url>.*?)['"]?\));/).exec(line).groups.url;
       const args = querystring.parse(ext_url.split('?').pop());
       const family = args.family.split(':').reverse().pop().replace(/[|\s]/g, '_');
       new GetGoogleFonts({
         cssFile: `${theme.name}-${family}.css`,
-        outputDir:  path.join(ROOT_DIR, THEME_FONT_DIR, 'fonts')
+        outputDir:  path.join(ROOT_DIR, THEME_FONT_DIR, 'fonts', family)
       }).download(ext_url)
-      preProcessCss.push(`@import url('${THEME_FONT_URL}fonts/${theme.name}-${family}.css');`);
-    } else if (line.startsWith('@import url(')) {
-      const cssImportURL = line.replace(CSS_URL_IMPORT, '$+{url}');
-      const cssImport = request('GET', cssImportURL).getBody('utf8');
-
-      preProcessCss.push(`/* ${line} */`);
-      preProcessCss = preProcessCss.concat(cssImport.split(/\n\r?/g));
-    } else {
-      preProcessCss.push(line);
+      return `@import url('${THEME_FONT_URL}fonts/${family}/${theme.name}-${family}.css');`;
     }
+    return line;
   });
 
   // set imports to local & download files
@@ -81,20 +70,22 @@ BootswatchThemes.themes.forEach(theme => {
       }
       processedLine = processedLine.replace(URL_REPLACE, `url('/${THEME_FONT_URL}${ext_file}')`);
     }
-
     processedLine = processedLine.replace(/\\[^\\]/g, '\\\\');
     processedLine = processedLine.replace(/^\s+\*/, '*');
     processedLine = processedLine.replace(/^\s+/, '\t');
     return processedLine;
   });
 
-  const minStyles = csso.minify(postProcessCss.join(''), {
-    comments: false,
+  const minStyleString = csso.minify(postProcessCss.join(''), {
+    comments: true,
     restructure: true,
     sourceMap: false
-  }).css;
+  }).css.split('\n');
+  const styleComments = minStyleString.filter(l => /^\/[\/\*]/.test(l)).join('\n').replace(/\*(\s|\/)/gm, "\n *$1");
+  const minStyles = minStyleString.filter(l => !/^\/[\/\*]/.test(l)).join('\n');
 
-  themeFile.write(`const ${themeName} = \`${minStyles}\`;\n\nexport default ${themeName};`);
+  themeFile.write(`${styleComments}\n\n`);
+  themeFile.write(`export default \`${minStyles}\`;\n`);
   themeFile.end();
 });
 
