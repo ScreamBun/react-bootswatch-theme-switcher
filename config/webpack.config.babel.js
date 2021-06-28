@@ -2,6 +2,8 @@
 import path from 'path';
 import webpack from 'webpack';
 
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+
 const NODE_ENV = 'production';
 const ROOT_DIR = path.join(__dirname, '..');
 const DIST_DIR = path.join(ROOT_DIR, 'dist');
@@ -11,21 +13,24 @@ module.exports = {
   mode: NODE_ENV,
   devtool: 'source-map',
   entry: {
-    index: "./src/index.js"
+    index: "./src/index.ts"
   },
   output: {
     path: DIST_DIR,
     // https://github.com/webpack/webpack/issues/1114
-    libraryTarget: 'commonjs',
+    libraryTarget: 'commonjs'
   },
   // Determine the array of extensions that should be used to resolve modules
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     modules: [SRC_DIR, 'node_modules']
   },
   plugins: [
     new webpack.DefinePlugin({
       NODE_ENV
+    }),
+    new CleanWebpackPlugin({
+      dry: false
     })
   ],
   optimization: {
@@ -55,9 +60,9 @@ module.exports = {
         test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: 'awesome-typescript-loader',
           options: {
-            cacheDirectory: true
+            declaration: true,
           }
         }
       }
