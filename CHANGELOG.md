@@ -1,3 +1,22 @@
+### [1.1.2]
+* Revert Typescript styles for async loading
+
+### [1.1.1]
+* Update build process in favor of webpack building
+
+### [1.1.0]
+* Update for dependencies
+
+### [1.1.0]
+* Update Themes for Bootstrap v4.6.0
+
+### [1.0.10]
+* Updates for Lint rules
+* Fix Typing for children in ThemeSwitcher
+
+### [1.0.9]
+* Update context for Typescript
+
 ### [1.0.8]
 * Update components to Typescript
 

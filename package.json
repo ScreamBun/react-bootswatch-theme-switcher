@@ -45,7 +45,6 @@
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "cross-env": "^7.0.3",
-    "csso": "^4.2.0",
     "download-file-sync": "^1.0.4",
     "eslint": "^7.29.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
