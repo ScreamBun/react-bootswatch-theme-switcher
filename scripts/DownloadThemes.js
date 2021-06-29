@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const path = require('path');
-const csso = require('csso');
 const fs = require('fs');
 const GetGoogleFonts = require('get-google-fonts');
 const download = require('download-file-sync');
@@ -11,8 +10,7 @@ const querystring = require('querystring');
 
 const ROOT_DIR = path.join(__dirname, '..');
 const SOURCE_DIR = path.join(ROOT_DIR, 'src');
-const THEME_DIR = path.join(SOURCE_DIR, 'themes');
-const CHECK_DIRS = ['assets', 'assets', 'assets/fonts'];
+const CHECK_DIRS = ['assets', 'assets/fonts', 'assets/themes'];
 
 const THEME_API = 'https://bootswatch.com/api/4.json';
 const THEME_FONT_DIR = '/assets/';
@@ -36,9 +34,6 @@ BootswatchThemes.themes.forEach(theme => {
   console.log(`Downloading Theme: ${theme.name}`);
   const themeName = theme.name.toLowerCase();
   themeNames.push(themeName);
-
-  const themeFile = fs.createWriteStream(path.join(THEME_DIR, `${themeName}.ts`), {flags: 'w'});
-  themeFile.write(`// Theme: ${theme.name}\n`);
   const css = request('GET', theme.css).getBody('utf8');
 
   // Imported items
@@ -76,24 +71,14 @@ BootswatchThemes.themes.forEach(theme => {
     return processedLine;
   });
 
-  const minStyleString = csso.minify(postProcessCss.join(''), {
-    comments: true,
-    restructure: true,
-    sourceMap: false
-  }).css.split('\n');
-  const styleComments = minStyleString.filter(l => /^\/[\/\*]/.test(l)).join('\n').replace(/\*(\s|\/)/gm, "\n *$1");
-  const minStyles = minStyleString.filter(l => !/^\/[\/\*]/.test(l)).join('\n');
-
-  themeFile.write(`${styleComments}\n\n`);
-  themeFile.write(`export default \`${minStyles}\`;\n`);
-  themeFile.end();
+  const cssFile = fs.createWriteStream(path.join(ROOT_DIR, 'assets', 'themes', `${themeName}.css`), {flags: 'w'});
+  cssFile.write(postProcessCss.join('\n').replace(/\n\n/g, '\n'));
+  cssFile.end();
 });
 
 // make theme index file
-const themeIndexFile = fs.createWriteStream(path.join(SOURCE_DIR, 'themes', 'index.ts'), {flags: 'w'});
-themeIndexFile.write(themeNames.map(t => `import ${t} from './${t}';`).join('\n'));
-themeIndexFile.write(`\n\nexport type ThemeName = '${themeNames.join("'|'")}';\n`);
-themeIndexFile.write(`\nconst Themes: Record<ThemeName, string> = {\n\t${themeNames.join(',\n\t')}\n};\n`);
-
-themeIndexFile.write(`\nexport default Themes;\n`);
+const themeIndexFile = fs.createWriteStream(path.join(SOURCE_DIR, 'themes.ts'), {flags: 'w'});
+themeIndexFile.write(`export type ThemeName = '${themeNames.join("'|'")}';\n`);
+themeIndexFile.write(`const ThemeNames = ['${themeNames.join("', '")}'];\n`);
+themeIndexFile.write(`export default ThemeNames;\n`);
 themeIndexFile.end();

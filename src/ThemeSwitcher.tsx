@@ -1,6 +1,6 @@
 /* eslint react/static-property-placement: 1 */
 import React, { Component } from 'react';
-import BootswatchThemes, { ThemeName } from './themes';
+import BootswatchThemes from './themes';
 // import '../assets/loader.css';
 
 const setItem = (key: string, obj: any): void => {
@@ -34,8 +34,7 @@ interface ThemeSwitcherProps {
 }
 
 interface ThemeSwitcherState {
-  currentTheme: string;
-  customThemes: { [theme: string]: string };
+  loadedThemes: { [theme: string]: string };
   theme: string;
   themeOptions: Set<string>;
 }
@@ -78,61 +77,57 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
       defaultTheme, storeThemeKey, themes, themeOptions
     } = this.props;
 
-    const BootswatchNames = Object.keys(BootswatchThemes);
-    const validThemeOptions = new Set((themeOptions || []).filter(t => BootswatchNames.includes(t)));
-    const customThemes = themes || {};
+    const validThemeOptions = new Set((themeOptions || []).filter(t => BootswatchThemes.includes(t)));
+    const loadedThemes = themes || {};
 
     const defTheme = getItem(storeThemeKey) as string || defaultTheme;
     validThemeOptions.add(defTheme);
-    Object.keys(customThemes).forEach(theme => {
+    Object.keys(loadedThemes).forEach(theme => {
       validThemeOptions.add(theme);
     });
 
     this.state = {
-      currentTheme: defTheme,
-      customThemes,
-      theme: '',
+      loadedThemes,
+      theme: defTheme,
       themeOptions: validThemeOptions
     };
   }
 
   componentDidMount() {
-    const { currentTheme } = this.state;
-    this.load(currentTheme);
+    const { theme } = this.state;
+    this.load(theme);
   }
 
   setTheme() {
     const { theme } = this.state;
+    const themeStyle = this.getTheme(theme);
     const themeStyles: HTMLStyleElement = document.querySelector('style#themeStyles') || document.createElement('style');
     if (themeStyles.id !== 'themeStyles') {
       themeStyles.id = 'themeStyles';
       themeStyles.type = 'text/css';
     }
     document.head.append(themeStyles);
-    themeStyles.innerHTML = theme;
+    themeStyles.innerHTML = themeStyle;
   }
 
   // pass reference to this down to ThemeChooser component
   getContext(): ThemeContext {
     const { defaultTheme } = this.props;
-    const { currentTheme, themeOptions } = this.state;
-
+    const { theme, themeOptions } = this.state;
     return {
       defaultTheme,
       themeSwitcher: this,
       themes: Array.from(themeOptions),
-      currentTheme
+      currentTheme: theme
     };
   }
 
   getTheme(theme: string): string {
-    const { customThemes, themeOptions } = this.state;
-    if (Object.keys(customThemes).includes(theme)) {
-      return customThemes[theme];
+    const { loadedThemes } = this.state;
+    if (Object.keys(loadedThemes).includes(theme)) {
+      return loadedThemes[theme];
     }
-    if (themeOptions.has(theme)) {
-      return BootswatchThemes[theme as ThemeName];
-    }
+    this.loadTheme(theme);
     return '';
   }
 
@@ -142,10 +137,29 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
       const { storeThemeKey } = this.props;
       setItem(storeThemeKey, theme);
       this.setState({
-        currentTheme: theme,
-        theme: themeStyles
+        theme
       }, () => this.setTheme());
+    } else {
+      this.loadTheme(theme);
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  loadTheme(theme: string) {
+    // eslint-disable-next-line compat/compat
+    fetch(`assets/themes/${theme}.css`).then(val => {
+      return val.text();
+    }).then(styles => {
+      this.setState(prevState => ({
+        loadedThemes: {
+          ...prevState.loadedThemes,
+          [theme]: styles
+        }
+      }), () => this.load(theme));
+      return styles;
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   render() {
