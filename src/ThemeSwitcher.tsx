@@ -1,5 +1,6 @@
 /* eslint react/static-property-placement: 1 */
 import React, { Component } from 'react';
+import axios from 'axios';
 import BootswatchThemes from './themes';
 // import '../assets/loader.css';
 
@@ -144,16 +145,16 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   loadTheme(theme: string) {
-    // eslint-disable-next-line compat/compat
-    fetch(`assets/themes/${theme}.css`).then(val => {
-      return val.text();
+    axios({
+      method: 'GET',
+      url: `assets/themes/${theme}.css`,
+      timeout: 5000    // 5 seconds timeout
     }).then(styles => {
       this.setState(prevState => ({
         loadedThemes: {
           ...prevState.loadedThemes,
-          [theme]: styles
+          [theme]: styles.data
         }
       }), () => this.load(theme));
       return styles;
