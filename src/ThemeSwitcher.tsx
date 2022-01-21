@@ -32,6 +32,7 @@ interface ThemeSwitcherProps {
   storeThemeKey: string;
   themes?: { [theme: string]: string };
   themeOptions?: Array<string>
+  themeRoot?: string;
 }
 
 interface ThemeSwitcherState {
@@ -62,7 +63,8 @@ const DefaultProps: ThemeSwitcherProps = {
   defaultTheme: 'lumen',
   storeThemeKey: '',
   themes: {},
-  themeOptions: Object.keys(BootswatchThemes)
+  themeOptions: Object.keys(BootswatchThemes),
+  themeRoot: ''
 };
 
 class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
@@ -146,9 +148,10 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
   }
 
   loadTheme(theme: string) {
+    const { themeRoot } = this.props;
     axios({
       method: 'GET',
-      url: `assets/themes/${theme}.css`,
+      url: `${themeRoot}/themes/${theme}.css`,
       timeout: 5000    // 5 seconds timeout
     }).then(styles => {
       this.setState(prevState => ({

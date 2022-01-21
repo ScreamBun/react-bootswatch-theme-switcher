@@ -47,6 +47,7 @@ To let users swich themes add the ```ThemeChooser``` to one of your pages (e.g. 
 * ```storeThemeKey``` - name of localStorage key used to save the last theme (default ```theme```)
 * ```themes``` - named array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```null```)
 * ```themeOptions``` -  array of themes to display in the ```ThemeChooser``` (default is all Bootswatch themes)
+* ```themeRoot``` -  path to the themes folder ```[ROOT]/themes/(THEME).css``` (default is ```''```)
 
 ###ThemeChooser props
 * ```style``` - custom styles to apply to the ```ThemeChooser``` (default ```{}```)
