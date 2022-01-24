@@ -42,10 +42,11 @@ render(
 To let users swich themes add the ```ThemeChooser``` to one of your pages (e.g. a Settings page). The ```ThemeChooser``` gets passed a reference to the ```ThemeSwitcher``` via the ```React Context``` mechanism, so it can trigger a re-render and not display the children components during theme unloading and reloading.
 
 ###ThemeSwitcher props
-* ```defaultTheme``` - Default theme to use if user has not selected one (default ```'lumen'```)
-* ```storeThemeKey``` - Name of localStorage key used to save the last theme (default ```theme```)
-* ```themes``` - Array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```{}```)
-* ```themeOptions``` -  Array of theme names that can be selected & shown in the ```ThemeChooser``` (default is all Bootswatch themes)
+* ```defaultTheme``` - default theme to use if user has not selected one (default ```'lumen'```)
+* ```storeThemeKey``` - name of localStorage key used to save the last theme (default ```theme```)
+* ```themes``` - named array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```null```)
+* ```themeOptions``` -  array of themes to display in the ```ThemeChooser``` (default is all Bootswatch themes)
+* ```themeRoot``` -  path to the themes folder ```[ROOT]/themes/(THEME).css``` (default is ```''```)
 
 ###ThemeChooser props
 * ```style``` - Custom styles to apply to the ```ThemeChooser``` (default ```{}```)
