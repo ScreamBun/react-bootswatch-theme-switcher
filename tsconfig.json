@@ -21,16 +21,16 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "typeRoots": [
-      "src/@types",
+      "lib/@types",
       "node_modules/@types"
     ],
     /* Additional Options */
-    "baseUrl": "src",
+    "baseUrl": "lib",
     "declaration": true,
     "removeComments": true,
     "jsx": "react",
-    "rootDir": "src",
-    "outDir": "dist"
+    "rootDir": "lib",
+    "outDir": "lib"
   },
   "exclude": [
     ".eslintrc.js",
@@ -39,7 +39,7 @@
     "test"
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "lib/**/*.ts",
+    "lib/**/*.tsx"
   ]
 }

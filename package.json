@@ -1,17 +1,17 @@
 {
   "name": "react-bootswatch-theme-switcher",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A React component to select and switch between Bootstrap (Bootswatch) Themes",
   "homepage": "https://github.com/czack425/react-bootswatch-theme-switcher#readme",
   "license": "ISC",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "yarn build:dist && yarn test",
-    "build:dist": "rimraf dist && yarn build:tsc && yarn build:commonjs",
-    "build:commonjs": "cross-env NODE_ENV=production babel ./src --out-dir ./dist/ --ignore *.test.js",
+    "build:dist": "yarn clean && yarn build:tsc && yarn build:commonjs",
+    "build:commonjs": "cross-env NODE_ENV=production babel ./lib --out-dir ./lib/ --ignore *.test.js",
     "build:webpack": "cross-env NODE_ENV=production webpack --progress --config ./config/webpack.config.babel.js",
     "build:tsc": "yarn clean && tsc --downlevelIteration",
-    "clean": "ts-clean -d src -e .js,.d.ts",
+    "clean": "ts-clean -d lib -e .js,.d.ts",
     "get_themes": "node ./scripts/DownloadThemes.js",
     "lint": "eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "lint-errors": "yarn lint --quiet",
@@ -19,27 +19,27 @@
     "test": "echo \"TODO: tests\""
   },
   "dependencies": {
-    "@babel/runtime": "^7.16.7",
-    "axios": "^0.25.0"
+    "@babel/runtime": "^7.18.3",
+    "axios": "^0.27.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.8",
-    "@babel/core": "^7.16.10",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-proposal-object-rest-spread": "^7.16.7",
-    "@babel/plugin-proposal-private-methods": "^7.16.11",
-    "@babel/plugin-transform-modules-commonjs": "^7.16.8",
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.2",
+    "@babel/plugin-proposal-class-properties": "^7.17.12",
+    "@babel/plugin-proposal-object-rest-spread": "^7.18.0",
+    "@babel/plugin-proposal-private-methods": "^7.17.12",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.2",
     "@babel/plugin-transform-object-assign": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.16.10",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
-    "@babel/preset-typescript": "^7.16.7",
-    "@babel/register": "^7.16.9",
-    "@types/react": "^17.0.38",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
+    "@babel/plugin-transform-runtime": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "@babel/preset-typescript": "^7.17.12",
+    "@babel/register": "^7.17.7",
+    "@types/react": "^17.0.43",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
     "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^8.2.5",
     "babel-plugin-extensible-destructuring": "^4.3.1",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
@@ -53,29 +53,29 @@
     "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-compat": "^3.13.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-eslint-plugin": "^4.1.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^25.7.0",
+    "eslint-plugin-eslint-plugin": "^4.2.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^25.3.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^5.2.0",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
-    "fs-extra": "^10.0.0",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "fs-extra": "^10.1.0",
     "get-google-fonts": "^1.2.2",
-    "jest": "^27.4.7",
-    "named-regexp-groups": "^1.0.5",
-    "prettier": "^2.5.1",
+    "jest": "^27.5.1",
+    "named-regexp-groups": "^1.0.6",
+    "prettier": "^2.6.2",
     "querystring": "^0.2.1",
-    "react": ">=17.0.2",
-    "react-dom": ">=17.0.2",
-    "reactstrap": "^8.10.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "reactstrap": "^8.10.1",
     "rimraf": "^3.0.2",
     "sync-request": "^6.1.0",
     "ts-clean": "^1.0.3",
-    "typescript": "^4.5.5",
-    "webpack": "^5.66.0",
-    "webpack-cli": "^4.9.1"
+    "typescript": "^4.7.3",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.9.2"
   },
   "peerDependencies": {
     "react": ">=17.0.2",
@@ -86,6 +86,49 @@
     "node": ">=12.x",
     "npm": ">=7.x",
     "yarn": ">=1.21.3"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": [
+          ".prettierrc",
+          ".babelrc",
+          ".eslintrc",
+          ".stylelintrc"
+        ],
+        "options": {
+          "parser": "json"
+        }
+      }
+    ],
+    "singleQuote": true
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ]
+  },
+  "jest": {
+    "testURL": "http://localhost/",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "app/node_modules"
+    ],
+    "setupFiles": [
+      "./internals/scripts/CheckBuildsExist.js"
+    ]
   },
   "repository": {
     "type": "git",
