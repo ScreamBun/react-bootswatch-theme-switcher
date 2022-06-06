@@ -5,13 +5,13 @@ const developmentPlugins = [
   // require('react-hot-loader/babel')
 ];
 
-const productionPlugins = [
-  // require('babel-plugin-dev-expression'),
-  // babel-preset-react-optimize
-  // require('@babel/plugin-transform-react-constant-elements'),
-  // require('@babel/plugin-transform-react-inline-elements'),
-  // require('babel-plugin-transform-react-remove-prop-types')
-];
+const productionPlugins = [ /*
+  require('babel-plugin-dev-expression'),
+  // require('babel-preset-react-optimize'),
+  require('@babel/plugin-transform-react-constant-elements'),
+  require('@babel/plugin-transform-react-inline-elements'),
+  require('babel-plugin-transform-react-remove-prop-types')
+*/];
 
 module.exports = api => {
   // see docs about api at https://babeljs.io/docs/en/config-files#apicache
@@ -33,14 +33,8 @@ module.exports = api => {
       require('@babel/plugin-proposal-export-default-from'),
       require('@babel/plugin-proposal-logical-assignment-operators'),
       [require('@babel/plugin-proposal-optional-chaining'), { loose: false }],
-      [
-        require('@babel/plugin-proposal-pipeline-operator'),
-        { proposal: 'minimal' }
-      ],
-      [
-        require('@babel/plugin-proposal-nullish-coalescing-operator'),
-        { loose: false }
-      ],
+      [require('@babel/plugin-proposal-pipeline-operator'), { proposal: 'minimal' }],
+      [require('@babel/plugin-proposal-nullish-coalescing-operator'), { loose: false }],
       require('@babel/plugin-proposal-do-expressions'),
 
       // Stage 2
@@ -48,7 +42,9 @@ module.exports = api => {
       require('@babel/plugin-proposal-function-sent'),
       require('@babel/plugin-proposal-export-namespace-from'),
       require('@babel/plugin-proposal-numeric-separator'),
-      require('@babel/plugin-proposal-throw-expressions'),
+      require('@babel/plugin-proposal-throw-expressions'),*/
+      [require('@babel/plugin-proposal-private-property-in-object'), { loose: true }],
+      /*
 
       // Stage 3
       require('@babel/plugin-syntax-dynamic-import'),
