@@ -6,8 +6,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 const NODE_ENV = 'production';
 const ROOT_DIR = path.join(__dirname, '..');
-const DIST_DIR = path.join(ROOT_DIR, 'dist');
-const SRC_DIR = path.join(ROOT_DIR, 'src');
+const LIB_DIR = path.join(ROOT_DIR, 'lib');
 
 module.exports = {
   mode: NODE_ENV,
@@ -16,14 +15,14 @@ module.exports = {
     index: "./src/index.ts"
   },
   output: {
-    path: DIST_DIR,
+    path: LIB_DIR,
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs'
   },
   // Determine the array of extensions that should be used to resolve modules
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    modules: [SRC_DIR, 'node_modules']
+    modules: [LIB_DIR, 'node_modules']
   },
   plugins: [
     new webpack.DefinePlugin({
