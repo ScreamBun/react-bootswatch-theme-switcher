@@ -15,7 +15,8 @@
     "get_themes": "node ./scripts/DownloadThemes.js",
     "lint": "eslint . --cache --ext .ts,.tsx --ignore-pattern *.d.ts",
     "lint-errors": "yarn lint --quiet",
-    "prepare": "yarn build",
+    "prepare": "yarn prepack",
+    "prepack": "yarn build",
     "test": "echo \"TODO: tests\""
   },
   "dependencies": {
