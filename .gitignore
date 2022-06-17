@@ -163,10 +163,8 @@ typings/
 /lib/**/*.d.ts
 /lib/**/*.js
 
-
 # Definitions
 !lib/@types/**/*.d.ts
-
 
 # Custom Ignore
 .idea/*
