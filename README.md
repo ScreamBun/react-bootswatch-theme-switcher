@@ -15,7 +15,7 @@ Update Demos
 ### Install
 
 ```
-npm install https://github.com/czack425/react-bootswatch-theme-switcher.git
+npm install screambun/react-bootswatch-theme-switcher
 ```
 ### Setup
 The theme switcher works by dynamically modifying the document's style element to switch between the Bootswatch themes. There are two components:
