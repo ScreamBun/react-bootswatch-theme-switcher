@@ -33,12 +33,14 @@ interface ThemeSwitcherProps {
   themes?: { [theme: string]: string };
   themeOptions?: Array<string>
   themeRoot?: string;
+  children?: React.ReactNode;
 }
 
 interface ThemeSwitcherState {
   loadedThemes: { [theme: string]: string };
   theme: string;
   themeOptions: Set<string>;
+  children?: React.ReactNode;
 }
 
 export interface ThemeContext {
@@ -47,6 +49,7 @@ export interface ThemeContext {
   themeSwitcher?: ThemeSwitcher;
   themes: Array<string>;
   currentTheme: string;
+  children?: React.ReactNode;
 }
 
 export const ThemeSwitcherContext = React.createContext<ThemeContext>({
