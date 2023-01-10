@@ -9,7 +9,7 @@ const setItem = (key: string, obj: any): void => {
   try {
     localStorage.setItem(key, JSON.stringify(obj));
   } catch (err) {
-    // TODO: something...
+    console.log(err);
   }
 };
 
@@ -53,7 +53,7 @@ export interface ThemeContext {
 }
 
 export const ThemeSwitcherContext = React.createContext<ThemeContext>({
-  defaultTheme: 'lumen',
+  defaultTheme: 'light',
   themeSwitcher: undefined,
   themes: [],
   currentTheme: ''
@@ -63,7 +63,7 @@ export const ThemeSwitcherContext = React.createContext<ThemeContext>({
 // Top level ThemeSwitcher Component
 //------------------------------------------------------------------------------
 const DefaultProps: ThemeSwitcherProps = {
-  defaultTheme: 'lumen',
+  defaultTheme: 'light',
   storeThemeKey: '',
   themes: {},
   themeOptions: Object.keys(BootswatchThemes),
@@ -155,7 +155,7 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
     axios({
       method: 'GET',
       url: `${themeRoot}/themes/${theme}.css`,
-      timeout: 5000    // 5 seconds timeout
+      timeout: 2000    // 2 seconds timeout
     }).then(styles => {
       this.setState(prevState => ({
         loadedThemes: {

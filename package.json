@@ -1,6 +1,6 @@
 {
   "name": "react-bootswatch-theme-switcher",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "description": "A React component to select and switch between Bootstrap (Bootswatch) Themes",
   "homepage": "https://github.com/screambun/react-bootswatch-theme-switcher#readme",
   "license": "ISC",
