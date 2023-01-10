@@ -152,10 +152,11 @@ class ThemeSwitcher extends Component<ThemeSwitcherProps, ThemeSwitcherState> {
 
   loadTheme(theme: string) {
     const { themeRoot } = this.props;
+    console.log(`themeRoot: ${  themeRoot}`);
     axios({
       method: 'GET',
       url: `${themeRoot}/themes/${theme}.css`,
-      timeout: 2000    // 2 seconds timeout
+      timeout: 5000    // 5 seconds timeout
     }).then(styles => {
       this.setState(prevState => ({
         loadedThemes: {
