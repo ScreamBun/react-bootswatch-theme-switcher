@@ -32,7 +32,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 render(
     <Provider store={store}>
-      <ThemeSwitcher defaultTheme="yeti">
+      <ThemeSwitcher defaultTheme="light">
         <Router history={history} routes={routes} />
       </ThemeSwitcher>
     </Provider>, document.getElementById('app')
@@ -42,7 +42,7 @@ render(
 To let users swich themes add the ```ThemeChooser``` to one of your pages (e.g. a Settings page). The ```ThemeChooser``` gets passed a reference to the ```ThemeSwitcher``` via the ```React Context``` mechanism, so it can trigger a re-render and not display the children components during theme unloading and reloading.
 
 ###ThemeSwitcher props
-* ```defaultTheme``` - default theme to use if user has not selected one (default ```'lumen'```)
+* ```defaultTheme``` - default theme to use if user has not selected one (default ```'light'```)
 * ```storeThemeKey``` - name of localStorage key used to save the last theme (default ```theme```)
 * ```themes``` - named array of custom themes to choose, formatted as `{THEME: "CSS AS STRING"}`  (default ```null```)
 * ```themeOptions``` -  array of themes to display in the ```ThemeChooser``` (default is all Bootswatch themes)
@@ -97,7 +97,7 @@ This way, if no theme is currently loaded 'yeti' will be used, but if the user s
 By default the ```ThemeChooser``` displays all Bootswatch themes. However, if you only want to use a subset you can specify the theme names via the ```themeOptions``` property of the ```ThemeSwitcher```, for example:
 
 ```javascript
-let themes = ['default', 'cerulean', 'darkly'];
+let themes = ['light', 'dark'];
 
 render(
     <Provider store={store}>
