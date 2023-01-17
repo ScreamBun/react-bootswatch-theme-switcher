@@ -70,7 +70,7 @@
     "querystring": "^0.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "reactstrap": "^8.10.1",
+    "reactstrap": "^9.1.5",
     "rimraf": "^3.0.2",
     "sync-request": "^6.1.0",
     "ts-clean": "^1.0.3",
