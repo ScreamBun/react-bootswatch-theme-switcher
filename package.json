@@ -37,7 +37,6 @@
     "@babel/preset-typescript": "^7.17.12",
     "@babel/register": "^7.17.7",
     "@types/react": "^17.0.43",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.2.5",
