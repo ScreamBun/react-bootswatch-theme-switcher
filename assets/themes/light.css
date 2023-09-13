@@ -10341,7 +10341,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .bg-primary {
-  background-image: linear-gradient(#1d9ce5, #1d9ce5 60%, #1d9ce5);
+  background-image: linear-gradient(#007acc, #007acc 60%, #007acc);
   background-repeat: no-repeat;
 }
 
@@ -10365,7 +10365,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .btn-primary {
-  background-image: linear-gradient(#1d9ce5, #1d9ce5 60%, #1d9ce5);
+  background-image: linear-gradient(#007acc, #007acc 60%, #007acc);
   background-repeat: no-repeat;
 }
 
